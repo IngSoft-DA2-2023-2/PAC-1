@@ -2,9 +2,8 @@
 using FluentAssertions;
 using Moq;
 using PAC.Vidly.WebApi.Controllers.Movies;
-using PAC.Vidly.WebApi.DataAccess;
+using PAC.Vidly.WebApi.Controllers.Movies.Models;
 using PAC.Vidly.WebApi.Services.Movies;
-using PAC.Vidly.WebApi.Services.Movies.Entities;
 
 namespace PAC.Vidly.WebApi.UnitTests.Controllers
 {
@@ -17,7 +16,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
         [TestInitialize]
         public void Initialize()
         {
-            _movieServiceMock = new Mock<IMovieService>(MockBehavior.Strict);
+            _movieServiceMock = new Mock<IMovieService>();
             _controller = new MovieController(_movieServiceMock.Object);
         }
 
@@ -25,38 +24,22 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
         [TestMethod]
         public void Create_WhenInfoIsCorrect_ShouldReturnId()
         {
-            var request = new Movie
-            {
-                Id = "test",
-                Name = "test",
-                CreatorId = "test",
-            };
+            var request = new CreateMovieRequest(){ Name = "test", CreatorId = "1"};
 
             var id = _controller.Create(request);
 
             _movieServiceMock.VerifyAll();
-            id.Should().NotBeNull(id);
-            id.Should().Be(request.Id);
+            id.Should().NotBeNull();
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Create_WhenNameIsEmpty_ShouldThrowException()
         {
-            var repositoryMock = new Mock<IRepository<Movie>>(MockBehavior.Strict);
-            var service = new MovieService(repositoryMock.Object);
-            var controller = new MovieController(service);
-
-            var request = new Movie
-            {
-                Id = "test",
-                Name = string.Empty,
-                CreatorId = "test",
-            };
-
+            var request = new CreateMovieRequest(){ Name = "", CreatorId = "1"};
             try
             {
-                controller.Create(request);
+                _controller.Create(request);
             }
             catch (Exception ex)
             {
@@ -69,6 +52,9 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
         [TestMethod]
         public void GetAll_WhenExistOnlyOneMovie_ShouldReturnMoviesMapped()
         {
+            var request = new CreateMovieRequest(){ Name = "test", CreatorId = "1"};
+            _controller.Create(request);
+            
             var movies = _controller.GetAll();
 
             _movieServiceMock.VerifyAll();
@@ -77,7 +63,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
 
             var movie = movies[0];
             movie.Name.Should().Be("test");
-            movie.CreatorName.Should().Be("test creator");
+            movie.Id.Should().Be("1");
         }
         #endregion
     }

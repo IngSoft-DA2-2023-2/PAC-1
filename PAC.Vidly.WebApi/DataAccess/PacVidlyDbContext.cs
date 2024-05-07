@@ -26,10 +26,22 @@ namespace PAC.Vidly.WebApi.DataAccess
 
         private static void ConfigSchema(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Movie>().ToTable("Movies");
+            modelBuilder.Entity<Session>().ToTable("Sessions");
+            modelBuilder.Entity<User>().ToTable("Users");
         }
 
         private static void ConfigSeedData(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    Id = "1",
+                    Email = "f@gmail.co,",
+                    Name = "F",
+                    Password = "123"
+                }
+            );
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using PAC.Vidly.WebApi.DataAccess;
+using PAC.Vidly.WebApi.Services.Movies.Arguments;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
 
 namespace PAC.Vidly.WebApi.Services.Movies
@@ -12,14 +13,21 @@ namespace PAC.Vidly.WebApi.Services.Movies
             _movieRepository = movieRepository;
         }
 
-        public void Create(Movie movie, string userLoggedId)
+        public Movie Create(CreateMovieArgs movie)
         {
-            _movieRepository.Add(movie);
+            var newMovie = new Movie(movie.Name, movie.CreatorId);
+            _movieRepository.Add(newMovie);
+            return newMovie;
         }
 
         public List<Movie> GetAll()
         {
             return _movieRepository.GetAll();
+        }
+        
+        public bool IsMovieExist(string movieId)
+        {
+            return _movieRepository.GetAll().Any(x => x.Id == movieId);
         }
     }
 }

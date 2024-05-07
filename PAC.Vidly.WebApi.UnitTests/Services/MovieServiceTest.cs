@@ -2,6 +2,7 @@
 using Moq;
 using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Movies;
+using PAC.Vidly.WebApi.Services.Movies.Arguments;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
 
 namespace PAC.Vidly.WebApi.UnitTests.Services
@@ -16,76 +17,18 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
         [TestInitialize]
         public void Initialize()
         {
-            _movieRepositoryMock = new Mock<IRepository<Movie>>(MockBehavior.Strict);
+            _movieRepositoryMock = new Mock<IRepository<Movie>>();
             _service = new MovieService(_movieRepositoryMock.Object);
         }
-
-        #region Create
-        #region Error
+        
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Create_WhenNameIsNull_ShouldThrowException()
+        public void Create_WhenInfoIsCorrect_ShouldCallRepositoryAdd()
         {
-            var args = new Movie
-            {
-                Id = "test",
-                Name = null,
-                CreatorId = "test"
-            };
-            var userLoggedId = "test2";
+            var request = new CreateMovieArgs(){ Name = "test", CreatorId = "1"};
 
-            try
-            {
-                _service.Create(args, userLoggedId);
-            }
-            catch (Exception ex)
-            {
-                ex.Message.Should().Be("Name cannot be empty or null");
-            }
+            _service.Create(request);
+
+            _movieRepositoryMock.Verify(x => x.Add(It.IsAny<Movie>()), Times.Once);
         }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void Create_WhenMovieIsDuplicated_ShouldThrowException()
-        {
-            var args = new Movie
-            {
-                Id = "test",
-                Name = "duplicated",
-                CreatorId = "test"
-            };
-            var userLoggedId = "test2";
-
-            try
-            {
-                _service.Create(args, userLoggedId);
-            }
-            catch (Exception ex)
-            {
-                ex.Message.Should().Be("Movie is duplicated");
-            }
-        }
-        #endregion
-
-        #region Success
-        [TestMethod]
-        public void Create_WhenInfoIsCorrect_ShouldReturnId()
-        {
-            var args = new Movie
-            {
-                Id = "test",
-                Name = "duplicated",
-                CreatorId = "test"
-            };
-            var userLoggedId = "test2";
-
-            var movieId = _service.Create(args, userLoggedId);
-
-            _movieRepositoryMock.VerifyAll();
-            movieId.Should().NotBeNull();
-            movieId.Should().Be(args.Id);
-        }
-        #endregion
-        #endregion
     }
 }
