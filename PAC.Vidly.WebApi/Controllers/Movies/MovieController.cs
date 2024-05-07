@@ -6,7 +6,7 @@ using PAC.Vidly.WebApi.Services.Movies.Entities;
 namespace PAC.Vidly.WebApi.Controllers.Movies
 {
     [ApiController]
-    [Route("")]
+    [Route("movies")]
     public sealed class MovieController : ControllerBase
     {
         private readonly IMovieService _movieService;
