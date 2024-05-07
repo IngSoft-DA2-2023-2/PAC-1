@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Linq.Expressions;
+using FluentAssertions;
 using Moq;
 using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Movies;
@@ -10,7 +11,6 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
     public sealed class MovieServiceTests
     {
         private Mock<IRepository<Movie>> _movieRepositoryMock;
-
         private MovieService _service;
 
         [TestInitialize]
@@ -26,39 +26,47 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
         [ExpectedException(typeof(ArgumentNullException))]
         public void Create_WhenNameIsNull_ShouldThrowException()
         {
-            var args = new Movie
-            {
-                Id = "test",
-                Name = null,
-                CreatorId = "test"
-            };
-            var userLoggedId = "test2";
-
             try
             {
+                var args = new Movie
+                {
+                    Name = null,
+                    CreatorId = "test"
+                };
+                var userLoggedId = "test2";
+
+                _movieRepositoryMock.Setup(r => r.Exist(It.IsAny<Expression<Func<Movie, bool>>>())).Returns(false);
+                _movieRepositoryMock.Setup(r => r.Add(It.IsAny<Movie>()));
                 _service.Create(args, userLoggedId);
             }
             catch (Exception ex)
             {
                 ex.Message.Should().Be("Name cannot be empty or null");
+                throw;
             }
         }
+        
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void Create_WhenMovieIsDuplicated_ShouldThrowException()
         {
-            var args = new Movie
-            {
-                Id = "test",
-                Name = "duplicated",
-                CreatorId = "test"
-            };
-            var userLoggedId = "test2";
-
             try
             {
+                var args = new Movie
+                {
+                    Id = "test",
+                    Name = "duplicated",
+                    CreatorId = "test"
+                };
+                var userLoggedId = "test2";
+            
                 _service.Create(args, userLoggedId);
+                _movieRepositoryMock.Setup(r => r.Add(It.IsAny<Movie>()));
+                _movieRepositoryMock.Setup(r => r.Exist(It.IsAny<Expression<Func<Movie, bool>>>())).Returns(false);
+               
+                _service.Create(args, userLoggedId);
+                _movieRepositoryMock.Setup(r => r.Exist(It.IsAny<Expression<Func<Movie, bool>>>())).Returns(true);
             }
             catch (Exception ex)
             {

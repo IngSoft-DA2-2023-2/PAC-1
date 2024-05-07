@@ -96,9 +96,9 @@ Se debera de implementar un filtro de excepciones que mapee cualquier excepcion 
 
 ```JSON
 {
-  "Code": string,
-  "Message": string,
-  "DeveloperMessage": string
+  "Code": "string",
+  "Message": "string",
+  "DeveloperMessage": "string"
 }
 ```
 

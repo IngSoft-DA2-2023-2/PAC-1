@@ -12,9 +12,18 @@ namespace PAC.Vidly.WebApi.Services.Movies
             _movieRepository = movieRepository;
         }
 
-        public void Create(Movie movie, string userLoggedId)
+        public Movie Create(Movie movie, string userLoggedId)
         {
+            if(string.IsNullOrEmpty(movie.Name))
+                throw new ArgumentNullException("Name cannot be empty or null");
+            
+            var movieExists = _movieRepository.Exist(i => i.Name == movie.Name);
+            if (movieExists)
+                throw new ArgumentNullException ("Movie already exists");
+
             _movieRepository.Add(movie);
+
+            return movie;
         }
 
         public List<Movie> GetAll()

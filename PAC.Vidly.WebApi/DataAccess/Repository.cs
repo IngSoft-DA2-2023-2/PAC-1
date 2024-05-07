@@ -41,5 +41,24 @@ namespace PAC.Vidly.WebApi.DataAccess
 
             return entity;
         }
+
+        public bool Exist(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _entities.Any(predicate);
+        }
+
+        public TEntity Get(Expression<Func<TEntity, bool>> predicate)
+        {
+            {
+                var entity = _entities.FirstOrDefault(predicate);
+
+                if (entity == null)
+                {
+                    throw new InvalidOperationException($"Entity {typeof(TEntity).Name} not found");
+                }
+
+                return entity;
+            }
+        }
     }
 }

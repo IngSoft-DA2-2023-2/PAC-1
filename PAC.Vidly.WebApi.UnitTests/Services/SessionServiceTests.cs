@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Linq.Expressions;
+using FluentAssertions;
 using Moq;
 using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Sessions;
@@ -33,6 +34,25 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
 
             isValid.Should().BeTrue();
         }
+        #endregion
+        
+        #region Get
+        [TestMethod]
+        public void GetUserByToken_WhenTokenIsValid_ShouldReturnUser()
+        {
+            var token = Guid.NewGuid().ToString();
+            var session = new Session("test")
+            {
+                Token = token
+            };
+
+            _sessionRepositoryMock.Setup(r => r.GetOrDefault(It.IsAny<Expression<Func<Session, bool>>>())).Returns(session);
+            var user = _service.GetUserByToken(token);
+
+            user.Should().NotBeNull();
+            user.Id.Should().Be(session.UserId);
+        }
+
         #endregion
     }
 }

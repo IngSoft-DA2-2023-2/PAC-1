@@ -59,5 +59,18 @@ namespace PAC.Vidly.WebApi.Services.Sessions
 
             return session.User;
         }
+        
+        public Session? Get(string email, string password)
+        {
+            var session = _sessionRepository.Get(x => x.User.Email == email && x.User.Password == password);
+            if (session == null)
+            {
+                return null;
+            }
+            else
+            {
+                return session;
+            }
+        }
     }
 }

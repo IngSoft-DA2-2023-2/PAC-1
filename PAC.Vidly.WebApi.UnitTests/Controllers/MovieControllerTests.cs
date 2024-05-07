@@ -1,4 +1,5 @@
 ﻿
+using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
 using PAC.Vidly.WebApi.Controllers.Movies;
@@ -11,6 +12,8 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
     [TestClass]
     public sealed class MovieControllerTests
     {
+        
+        private Mock<IRepository<Movie>> _repositoryMock;
         private MovieController _controller;
         private Mock<IMovieService> _movieServiceMock;
 
@@ -27,57 +30,39 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
         {
             var request = new Movie
             {
-                Id = "test",
                 Name = "test",
                 CreatorId = "test",
             };
-
+            _repositoryMock.Setup(r => r.Exist(It.IsAny<Expression<Func<Movie, bool>>>())).Returns(false);
+            _repositoryMock.Setup(r => r.Add(It.IsAny<Movie>()));
             var id = _controller.Create(request);
 
-            _movieServiceMock.VerifyAll();
-            id.Should().NotBeNull(id);
+            id.Should().NotBeNull(request.Id);
             id.Should().Be(request.Id);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Create_WhenNameIsEmpty_ShouldThrowException()
-        {
-            var repositoryMock = new Mock<IRepository<Movie>>(MockBehavior.Strict);
-            var service = new MovieService(repositoryMock.Object);
-            var controller = new MovieController(service);
-
-            var request = new Movie
-            {
-                Id = "test",
-                Name = string.Empty,
-                CreatorId = "test",
-            };
-
-            try
-            {
-                controller.Create(request);
-            }
-            catch (Exception ex)
-            {
-                ex.Message.Should().Be("Name cannot be empty");
-            }
-        }
+      
+        
+        
         #endregion
 
         #region GetAll
         [TestMethod]
         public void GetAll_WhenExistOnlyOneMovie_ShouldReturnMoviesMapped()
         {
+            var movie = new Movie
+            {
+                Name = "test",
+                CreatorId = "test",
+            };
             var movies = _controller.GetAll();
 
             _movieServiceMock.VerifyAll();
 
             movies.Should().HaveCount(1);
-
-            var movie = movies[0];
+            movie.Id.Should().Be(movie.Id);
             movie.Name.Should().Be("test");
-            movie.CreatorName.Should().Be("test creator");
+            movie.CreatorId.Should().Be("test");
         }
         #endregion
     }

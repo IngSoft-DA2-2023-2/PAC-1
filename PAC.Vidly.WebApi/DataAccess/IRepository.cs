@@ -9,9 +9,10 @@ namespace PAC.Vidly.WebApi.DataAccess
         TEntity? GetOrDefault(Expression<Func<TEntity, bool>> predicate);
 
         List<TEntity> GetAll();
+        TEntity Get(Expression<Func<TEntity, bool>> predicate);
 
         void Update(TEntity entity);
 
-
+        bool Exist(Expression<Func<TEntity, bool>> predicate);
     }
 }
