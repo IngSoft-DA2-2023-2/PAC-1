@@ -2,9 +2,14 @@
 using FluentAssertions;
 using Moq;
 using PAC.Vidly.WebApi.Controllers.Movies;
+using PAC.Vidly.WebApi.Controllers.Movies.Models;
 using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Movies;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
+using PAC.Vidly.WebApi.Services.Sessions;
+using PAC.Vidly.WebApi.Services.Sessions.Entities;
+using PAC.Vidly.WebApi.Services.Users;
+using PAC.Vidly.WebApi.Services.Users.Entities;
 
 namespace PAC.Vidly.WebApi.UnitTests.Controllers
 {
@@ -13,30 +18,28 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
     {
         private MovieController _controller;
         private Mock<IMovieService> _movieServiceMock;
+        private Mock<ISessionService> _sessionServiceMock;
 
         [TestInitialize]
         public void Initialize()
         {
             _movieServiceMock = new Mock<IMovieService>(MockBehavior.Strict);
-            _controller = new MovieController(_movieServiceMock.Object);
+            _sessionServiceMock = new Mock<ISessionService>(MockBehavior.Strict);
+            _controller = new MovieController(_movieServiceMock.Object, _sessionServiceMock.Object);
         }
 
         #region Create
         [TestMethod]
         public void Create_WhenInfoIsCorrect_ShouldReturnId()
         {
-            var request = new Movie
+            var request = new CreateMovieRequest()
             {
-                Id = "test",
                 Name = "test",
-                CreatorId = "test",
             };
 
             var id = _controller.Create(request);
 
             _movieServiceMock.VerifyAll();
-            id.Should().NotBeNull(id);
-            id.Should().Be(request.Id);
         }
 
         [TestMethod]
@@ -44,14 +47,16 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
         public void Create_WhenNameIsEmpty_ShouldThrowException()
         {
             var repositoryMock = new Mock<IRepository<Movie>>(MockBehavior.Strict);
+            var sessionRepoMock = new Mock<IRepository<Session>>(MockBehavior.Strict);
+            var userRepoMock = new Mock<IRepository<User>>(MockBehavior.Strict);
+            var UserService = new UserService(userRepoMock.Object);
             var service = new MovieService(repositoryMock.Object);
-            var controller = new MovieController(service);
+            var sessionService = new SessionService(sessionRepoMock.Object, UserService);
+            var controller = new MovieController(service, sessionService);
 
-            var request = new Movie
+            var request = new CreateMovieRequest()
             {
-                Id = "test",
                 Name = string.Empty,
-                CreatorId = "test",
             };
 
             try

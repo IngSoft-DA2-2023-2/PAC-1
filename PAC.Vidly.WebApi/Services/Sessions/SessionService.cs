@@ -48,6 +48,15 @@ namespace PAC.Vidly.WebApi.Services.Sessions
             return isValid;
         }
 
+        public User GetCurrentUser(Guid? token)
+        {
+            if (token == null)
+                throw new NullReferenceException("No se puede obtener el usuario sin token de autenticación");
+            
+            var session = _sessionRepository.GetOrDefault(s=>s.Token == token.ToString());
+            return session.User;
+        }
+
         public User GetUserByToken(string token)
         {
             var session = _sessionRepository.GetOrDefault(s => s.Token == token);

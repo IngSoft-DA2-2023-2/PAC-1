@@ -9,5 +9,6 @@ namespace PAC.Vidly.WebApi.Services.Sessions
         User GetUserByToken(string token);
 
         bool IsValidToken(string token);
+        User GetCurrentUser(Guid? token);
     }
 }

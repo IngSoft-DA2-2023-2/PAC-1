@@ -132,5 +132,6 @@ Dado el identificador de una pelicula se desea obtener el nombre, la cantidad de
 
 Actualmente la interfaz `IUserService` tiene el metodo `GetByCredentials` la cual retorna el usuario con las credenciales que se le pase en caso de que exista, de lo contrario se retorna una excepcion. Dado que la visibilidad de `IUserService` es `public`, un `controller` que use esta interfaz tiene acceso a dicho metodo. Que principio SOLID usaria para que solo la funcionalidad `GetByCredentials` sea utilizada por clases `servicios`.
 
-[Responder aca]
+Se podria usar el principio de Inversion de Dependencias.
+Para aplicar este principio , se puede introducir una interfaz más específica que solo exponga el método necesario GetByCredentials, y hacer que IUserService dependa de esta nueva interfaz en lugar de exponer directamente su método.
 
