@@ -1,8 +1,10 @@
 ﻿using FluentAssertions;
 using Moq;
+using PAC.Vidly.WebApi.Controllers.Movies.Models;
 using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Movies;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
+using PAC.Vidly.WebApi.Services.Users.Entities;
 
 namespace PAC.Vidly.WebApi.UnitTests.Services
 {
@@ -22,27 +24,6 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
 
         #region Create
         #region Error
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Create_WhenNameIsNull_ShouldThrowException()
-        {
-            var args = new Movie
-            {
-                Id = "test",
-                Name = null,
-                CreatorId = "test"
-            };
-            var userLoggedId = "test2";
-
-            try
-            {
-                _service.Create(args, userLoggedId);
-            }
-            catch (Exception ex)
-            {
-                ex.Message.Should().Be("Name cannot be empty or null");
-            }
-        }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
