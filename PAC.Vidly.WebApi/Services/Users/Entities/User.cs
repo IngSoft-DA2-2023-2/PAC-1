@@ -1,4 +1,6 @@
-﻿namespace PAC.Vidly.WebApi.Services.Users.Entities
+﻿using PAC.Vidly.WebApi.Services.Movies.Entities;
+
+namespace PAC.Vidly.WebApi.Services.Users.Entities
 {
     public sealed record class User
     {
@@ -10,6 +12,8 @@
 
         public string Password { get; init; } = null!;
 
+        public List<Movie>? FavoriteMovie { get; set; } 
+
         public User() 
         { 
             Id = Guid.NewGuid().ToString();
@@ -18,12 +22,14 @@
         public User(
             string name,
             string email,
-            string password)
+            string password,
+            List<Movie>? list)
             : this()
         {
             Name = name;
             Email = email;
             Password = password;
+            FavoriteMovie = list;
         }
     }
 }

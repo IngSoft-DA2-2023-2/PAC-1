@@ -5,6 +5,7 @@ using PAC.Vidly.WebApi.Controllers.Movies;
 using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Movies;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
+using PAC.Vidly.WebApi.Services.Users;
 
 namespace PAC.Vidly.WebApi.UnitTests.Controllers
 {
@@ -13,12 +14,16 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
     {
         private MovieController _controller;
         private Mock<IMovieService> _movieServiceMock;
+        private Mock<IUserService> _userServiceMock;
+        private IRepository<Movie> repo;
 
         [TestInitialize]
         public void Initialize()
         {
             _movieServiceMock = new Mock<IMovieService>(MockBehavior.Strict);
-            _controller = new MovieController(_movieServiceMock.Object);
+            _userServiceMock = new Mock<IUserService>(MockBehavior.Strict);
+            var movieService = new MovieService(repo);
+            _controller = new MovieController(movieService, _userServiceMock.Object);
         }
 
         #region Create
@@ -32,11 +37,11 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
                 CreatorId = "test",
             };
 
-            var id = _controller.Create(request);
+            var response = _controller.Create(request);
 
             _movieServiceMock.VerifyAll();
-            id.Should().NotBeNull(id);
-            id.Should().Be(request.Id);
+            response.Should().NotBeNull(response.Id);
+            response.Should().Be(request.Id);
         }
 
         [TestMethod]
@@ -45,7 +50,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
         {
             var repositoryMock = new Mock<IRepository<Movie>>(MockBehavior.Strict);
             var service = new MovieService(repositoryMock.Object);
-            var controller = new MovieController(service);
+            var controller = new MovieController(service, _userServiceMock.Object);
 
             var request = new Movie
             {
