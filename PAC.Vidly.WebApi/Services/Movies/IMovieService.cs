@@ -4,7 +4,7 @@ namespace PAC.Vidly.WebApi.Services.Movies
 {
     public interface IMovieService
     {
-        void Create(Movie movie, string userLoggedId);
+        Movie Create(CreateMovieArgs args, string userLoggedId);
 
         List<Movie> GetAll();
     }

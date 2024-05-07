@@ -59,5 +59,10 @@ namespace PAC.Vidly.WebApi.Services.Sessions
 
             return session.User;
         }
+
+        public User GetUserLogged(HttpContext httpContext)
+        {
+            return httpContext.Items[Items.UserLogged] as User;
+        }
     }
 }
