@@ -8,22 +8,11 @@ namespace PAC.Vidly.WebApi.Services.Movies.Entities
 
         public string Name { get; init; } = null!;
 
-        public string CreatorId { get; init; } = null!;
-
-        public User Creator { get; init; } = null!;
+        public User Creator { get; set; } = null!;
 
         public Movie()
         {
             Id = Guid.NewGuid().ToString();
-        }
-
-        public Movie(
-            string name,
-            string creatorId)
-            : this()
-        {
-            Name = name;
-            CreatorId = creatorId;
         }
     }
 }

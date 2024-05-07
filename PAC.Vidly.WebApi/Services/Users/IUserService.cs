@@ -1,9 +1,12 @@
-﻿using PAC.Vidly.WebApi.Services.Users.Entities;
+﻿using PAC.Vidly.WebApi.Controllers.Users.Models;
+using PAC.Vidly.WebApi.Services.Users.Entities;
 
 namespace PAC.Vidly.WebApi.Services.Users
 {
     public interface IUserService
     {
         User GetByCredentials(string email, string password);
+
+        User Create(CreateUserRequest user);
     }
 }

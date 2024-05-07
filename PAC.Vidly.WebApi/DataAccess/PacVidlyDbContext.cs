@@ -26,6 +26,7 @@ namespace PAC.Vidly.WebApi.DataAccess
 
         private static void ConfigSchema(ModelBuilder modelBuilder)
         {
+
         }
 
         private static void ConfigSeedData(ModelBuilder modelBuilder)
