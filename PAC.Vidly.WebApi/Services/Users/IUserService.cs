@@ -4,6 +4,7 @@ namespace PAC.Vidly.WebApi.Services.Users
 {
     public interface IUserService
     {
+        User Create(User user);
         User GetByCredentials(string email, string password);
     }
 }
