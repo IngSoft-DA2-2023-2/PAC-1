@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PAC.Vidly.WebApi.Controllers.Sessions.Models;
+using PAC.Vidly.WebApi.Filters;
 using PAC.Vidly.WebApi.Services.Sessions;
 
 namespace PAC.Vidly.WebApi.Controllers.Sessions
@@ -15,7 +16,7 @@ namespace PAC.Vidly.WebApi.Controllers.Sessions
             _sessionService = sessionService;
         }
 
-        [HttpPost("post/login")]
+        [HttpPost("/post")]
         public string Create(CreateSessionRequest? request)
         {
             if(request == null)
