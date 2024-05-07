@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using PAC.Vidly.WebApi.Controllers.Movies.Models;
+using System.Linq.Expressions;
 
 namespace PAC.Vidly.WebApi.DataAccess
 {
@@ -11,7 +12,6 @@ namespace PAC.Vidly.WebApi.DataAccess
         List<TEntity> GetAll();
 
         void Update(TEntity entity);
-
-
+        bool Any(Func<object, bool> value);
     }
 }
