@@ -1,11 +1,13 @@
-﻿using PAC.Vidly.WebApi.Services.Movies.Entities;
+﻿using PAC.Vidly.WebApi.Services.Movies.Arguments;
+using PAC.Vidly.WebApi.Services.Movies.Entities;
 
 namespace PAC.Vidly.WebApi.Services.Movies
 {
     public interface IMovieService
     {
-        void Create(Movie movie, string userLoggedId);
+        Movie Create(CreateMovieArgs movie);
 
         List<Movie> GetAll();
+        bool IsMovieExist(string requestName);
     }
 }

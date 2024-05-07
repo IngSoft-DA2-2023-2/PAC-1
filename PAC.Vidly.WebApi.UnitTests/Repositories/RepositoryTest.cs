@@ -7,12 +7,12 @@ using System.Data.Common;
 namespace PAC.Vidly.WebApi.UnitTests.Repositories
 {
     [TestClass]
-    public sealed class RepositoryTests
+    public sealed class RepositoryTest
     {
         private readonly DbContext _dbContext;
         private readonly Repository<DummyEntity> _repository;
 
-        public RepositoryTests()
+        public RepositoryTest()
         {
             var options = new DbContextOptionsBuilder<DummyDbContext>()
             .UseInMemoryDatabase("test")

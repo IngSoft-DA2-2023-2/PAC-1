@@ -12,6 +12,25 @@ namespace PAC.Vidly.WebApi.Services.Users
         {
             _userRepository = userRepository;
         }
+        
+        public User Create(User user)
+        {
+            if (string.IsNullOrWhiteSpace(user.Name))
+            {
+                throw new ValidationException("Name cannot be empty");
+            }
+            if (IsUserExist(user.Email))
+            {
+                throw new ValidationException("User already exists");
+            }
+            _userRepository.Add(user);
+            return user;
+        }
+        
+        public bool IsUserExist(string email)
+        {
+            return _userRepository.GetOrDefault(u => u.Email == email) != null;
+        }
 
         public User GetByCredentials(string email, string password)
         {
