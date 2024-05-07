@@ -59,5 +59,6 @@ namespace PAC.Vidly.WebApi.Services.Sessions
 
             return session.User;
         }
+
     }
 }

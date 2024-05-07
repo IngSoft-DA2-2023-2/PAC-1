@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Moq;
 using PAC.Vidly.WebApi.Controllers.Movies;
+using PAC.Vidly.WebApi.Controllers.Movies.Models;
 using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Movies;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
@@ -25,18 +26,20 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
         [TestMethod]
         public void Create_WhenInfoIsCorrect_ShouldReturnId()
         {
-            var request = new Movie
+            
+            var request = new CreateMovieRequest
             {
                 Id = "test",
                 Name = "test",
                 CreatorId = "test",
             };
 
-            var id = _controller.Create(request);
+            var response = _controller.Create(request);
 
-            _movieServiceMock.VerifyAll();
-            id.Should().NotBeNull(id);
-            id.Should().Be(request.Id);
+            _movieServiceMock.Verify(x => x.Create(request, request.CreatorId), Times.Once);
+
+            response.Id.Should().Be(request.Id);
+            response.Name.Should().Be(request.Name);
         }
 
         [TestMethod]
@@ -47,7 +50,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
             var service = new MovieService(repositoryMock.Object);
             var controller = new MovieController(service);
 
-            var request = new Movie
+            var request = new CreateMovieRequest
             {
                 Id = "test",
                 Name = string.Empty,
@@ -77,7 +80,6 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
 
             var movie = movies[0];
             movie.Name.Should().Be("test");
-            movie.CreatorName.Should().Be("test creator");
         }
         #endregion
     }

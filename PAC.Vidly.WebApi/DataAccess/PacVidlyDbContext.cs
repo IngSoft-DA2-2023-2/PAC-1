@@ -30,6 +30,8 @@ namespace PAC.Vidly.WebApi.DataAccess
 
         private static void ConfigSeedData(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasData(new User("juan", "juan@gmail.com", "1234"));
+            
         }
     }
 }
