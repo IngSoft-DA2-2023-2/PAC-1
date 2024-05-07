@@ -14,16 +14,14 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
     public sealed class MovieController : ControllerBase
     {
         private readonly IMovieService _movieService;
-        private readonly IUserService _userService;
 
-        public MovieController(IMovieService movieService, IUserService userService)
+        public MovieController(IMovieService movieService)
         {
             _movieService = movieService;
-            _userService = userService;
         }
 
         [HttpPost]
-        public void Create(CreateMovieRequest? request)
+        public CreateMovieResponse Create(CreateMovieRequest? request)
         {
             if (request == null)
             {
@@ -34,8 +32,9 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
             
             var movieToSave = new CreateMovieArgs(request.Name);
             
-            _movieService.Create(movieToSave, userLogged);
-            
+            var movieSaved = _movieService.Create(movieToSave, userLogged);
+
+            return new CreateMovieResponse(movieSaved);
         }
 
         [HttpGet]

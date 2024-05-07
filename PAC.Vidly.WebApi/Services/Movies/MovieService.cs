@@ -14,7 +14,7 @@ namespace PAC.Vidly.WebApi.Services.Movies
             _movieRepository = movieRepository;
         }
 
-        public void Create(CreateMovieArgs movie, User Creator)
+        public Movie Create(CreateMovieArgs movie, User Creator)
         {
             var movieToSave = new Movie()
             {
@@ -27,6 +27,8 @@ namespace PAC.Vidly.WebApi.Services.Movies
                 throw new Exception("Movie duplicated"); 
             
             _movieRepository.Add(movieToSave);
+
+            return movieToSave;
         }
 
         public List<Movie> GetAll()
