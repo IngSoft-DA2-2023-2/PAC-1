@@ -16,6 +16,15 @@ builder.Services
 var services = builder.Services;
 var configuration = builder.Configuration;
 
+var connectionString = configuration.GetConnectionString("Vidly");
+if(string.IsNullOrEmpty(connectionString))
+{
+    throw new Exception("Missing BuildingManagerDb connection-string");
+}
+
+services.AddDbContext<DbContext, PacVidlyDbContext>
+    (options => options.UseSqlite(connectionString));
+
 services.AddScoped<IMovieService, MovieService>();
 
 
