@@ -132,5 +132,5 @@ Dado el identificador de una pelicula se desea obtener el nombre, la cantidad de
 
 Actualmente la interfaz `IUserService` tiene el metodo `GetByCredentials` la cual retorna el usuario con las credenciales que se le pase en caso de que exista, de lo contrario se retorna una excepcion. Dado que la visibilidad de `IUserService` es `public`, un `controller` que use esta interfaz tiene acceso a dicho metodo. Que principio SOLID usaria para que solo la funcionalidad `GetByCredentials` sea utilizada por clases `servicios`.
 
-[Responder aca]
+El solid mas apropiado seria el de Interface Segregation, creando un intermediario entre IUserService y el controller, ademas de modificar el metodo public en IUserService a que sea package.
 
