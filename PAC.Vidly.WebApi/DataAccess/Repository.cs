@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace PAC.Vidly.WebApi.DataAccess
 {
-    public sealed class Repository<TEntity> : IRepository<TEntity>
+    public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class
     {
         private readonly DbContext _dbContext;
@@ -33,7 +33,7 @@ namespace PAC.Vidly.WebApi.DataAccess
             _dbContext.SaveChanges();
         }
 
-        public TEntity? GetOrDefault(Expression<Func<TEntity, bool>> predicate)
+        public virtual TEntity? GetOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             var query = _entities.Where(predicate);
 

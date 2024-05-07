@@ -11,25 +11,37 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
     {
         private readonly IMovieService _movieService;
 
-        public MovieController(MovieService movieService)
+        public MovieController(IMovieService movieService)
         {
             _movieService = movieService;
         }
 
         [HttpPost]
-        public MovieBasicInfoResponse Create(Movie? request, string userToken)
+        public MovieBasicInfoResponse Create(CreateMovieRequest? request, string userToken)
         {
             if (request == null)
             {
                 throw new ArgumentNullException(nameof(request));
+            }
+            if (request.Name == null)
+            {
+                throw new Exception("Name is required");
             }
 
             if (string.IsNullOrWhiteSpace(userToken))
             {
                 throw new ArgumentNullException(nameof(userToken));
             }
-            _movieService.Create(request, userToken);
-            return new MovieBasicInfoResponse(request);
+            Movie movieToCreate = _movieService.Create(request, userToken);
+            return new MovieBasicInfoResponse(movieToCreate);
+        }
+
+        [HttpGet("{id}")]
+        public Movie Get(string id)
+        {
+            var movie = _movieService.GetById(id);
+
+            return movie;
         }
 
         [HttpGet]
