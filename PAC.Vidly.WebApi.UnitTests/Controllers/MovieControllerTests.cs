@@ -97,6 +97,26 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
             }
         }
         
+        [TestMethod]
+        public void Create_WhenNameOverSize_ShouldThrowException()
+        {
+            var request = new CreateMovieRequest()
+            {
+                Name = "ASDASdasdsadasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdadasdasdadasdasdasdasdadasdasdasdsadasdasdas",
+            };
+
+            _httpContextMock.SetupGet(c => c.Items[Items.UserLogged]).Returns(creator);
+            
+            try
+            {
+                _controller.Create(request);
+            }
+            catch (Exception ex)
+            {
+                ex.Message.Should().Be("Name cannot have more than 100 characters");
+            }
+        }
+        
         #endregion
 
         #region GetAll
