@@ -11,8 +11,9 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
     [TestClass]
     public sealed class MovieControllerTests
     {
-        private MovieController _controller;
         private Mock<IMovieService> _movieServiceMock;
+        private MovieController _controller;
+       
 
         [TestInitialize]
         public void Initialize()
