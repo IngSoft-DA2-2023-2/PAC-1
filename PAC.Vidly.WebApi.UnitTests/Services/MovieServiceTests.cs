@@ -49,19 +49,13 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
         [TestMethod]
         public void Create_WhenInfoIsCorrect_ShouldReturnId()
         {
-            var args = new Movie
-            {
-                Id = "test",
-                Name = "duplicated",
-                CreatorId = "test"
-            };
-            var userLoggedId = "test2";
+            var args = new CreateMovieArgs("Correct");
 
-            var movieId = _service.Create(args, userLoggedId);
+            var movie = _service.Create(args, new User());
 
             _movieRepositoryMock.VerifyAll();
-            movieId.Should().NotBeNull();
-            movieId.Should().Be(args.Id);
+            movie.Should().NotBeNull();
+            movie.Name.Should().Be("Correct");
         }
         #endregion
         #endregion
