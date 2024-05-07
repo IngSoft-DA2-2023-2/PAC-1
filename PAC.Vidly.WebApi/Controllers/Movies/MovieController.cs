@@ -2,6 +2,7 @@
 using PAC.Vidly.WebApi.Controllers.Movies.Models;
 using PAC.Vidly.WebApi.Services.Movies;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
+using PAC.Vidly.WebApi.Services.Users.Entities;
 
 namespace PAC.Vidly.WebApi.Controllers.Movies
 {
@@ -24,17 +25,24 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var userLogged = GetUserLogged();
+            User userLogged = GetUserLogged();
 
             _movieService.Create(request, userLogged.Id);
         }
 
-        [HttpGet]
-        public List<MovieBasicInfoResponse> GetAll()
+        private User GetUserLogged()
         {
-            var movies = _movieService.GetAll();
-
-            return movies;
+            throw new NotImplementedException();
         }
-    }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            List<Movie> movies = _movieService.GetAll();
+
+            return Ok(movies);
+        }
+
+            
+    }   
 }

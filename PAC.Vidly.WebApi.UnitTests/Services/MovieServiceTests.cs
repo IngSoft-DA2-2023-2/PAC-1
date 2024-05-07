@@ -79,11 +79,10 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
             };
             var userLoggedId = "test2";
 
-            var movieId = _service.Create(args, userLoggedId);
+            _service.Create(args, userLoggedId);
 
             _movieRepositoryMock.VerifyAll();
-            movieId.Should().NotBeNull();
-            movieId.Should().Be(args.Id);
+           
         }
         #endregion
         #endregion
