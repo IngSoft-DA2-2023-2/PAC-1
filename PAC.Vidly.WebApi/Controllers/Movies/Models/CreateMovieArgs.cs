@@ -8,6 +8,7 @@ public class CreateMovieArgs
     public CreateMovieArgs(string name)
     {
         if (string.IsNullOrEmpty(name)) throw new Exception("Name cannot be empty or null");
+        if (name.Length > 100) throw new Exception("Name cannot have more than 100 characters");
         Name = name;
     }
 }
