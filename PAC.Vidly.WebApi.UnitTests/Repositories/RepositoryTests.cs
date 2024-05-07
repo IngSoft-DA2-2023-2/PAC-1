@@ -22,7 +22,13 @@ namespace PAC.Vidly.WebApi.UnitTests.Repositories
 
             _repository = new Repository<DummyEntity>(_dbContext);
         }
-
+        
+        [TestCleanup]
+        public void Cleanup()
+        {
+            _dbContext.Database.EnsureDeleted();
+        }
+        
         #region Add
         [TestMethod]
         public void Add_WhenInfoIsProvided_ShouldAddedToDatabase()
@@ -74,6 +80,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Repositories
     internal sealed class DummyDbContext : DbContext
     {
         public DbSet<DummyEntity> Dummies { get; set; }
+        //no se como acceder a dummies
 
         public DummyDbContext(DbContextOptions options)
         : base(options)

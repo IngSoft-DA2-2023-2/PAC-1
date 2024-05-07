@@ -14,7 +14,7 @@ namespace PAC.Vidly.WebApi.Services.Movies
             _movieRepository = movieRepository;
         }
 
-        public string Create(CreateMovieRequest movieRequest, User userLogged)
+        public string Create(CreateMovieArgs movieRequest, User userLogged)
         {
             Movie movie = new Movie
             {
@@ -24,7 +24,6 @@ namespace PAC.Vidly.WebApi.Services.Movies
             };
 
             validateMovieIsNotDuplicated(movie);
-            
             _movieRepository.Add(movie);
             return movie.Id;
         }
@@ -47,7 +46,7 @@ namespace PAC.Vidly.WebApi.Services.Movies
             Movie? duplicatedMovie = _movieRepository.
                 GetOrDefault(movie => movie.Name == movie.Name);
             if (duplicatedMovie is not null)
-                throw new Exception("Movie duplicated");
+                throw new InvalidOperationException("Movie duplicated");
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     public sealed record class CreateMovieRequest
     {
-        public string Name { get; init; }
+        public string? Name { get; init; }
     }
 }
