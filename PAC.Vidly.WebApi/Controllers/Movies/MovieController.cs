@@ -42,11 +42,11 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
             return movies;
         }
 
-        [HttpGet]
-        public MovieObtained Get(string id)
-        {
-            _movieService.Get(id);
-        }
+        // [HttpGet]
+        // public MovieObtained Get(string id)
+        // {
+        //     _movieService.Get(id);
+        // }
         private static void ThrowException(string code, string description) => throw new Exception($"Code:{code}, Description: {description}");
 
     }
