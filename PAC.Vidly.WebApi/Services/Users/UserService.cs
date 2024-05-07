@@ -1,16 +1,23 @@
 ﻿using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Users.Entities;
-using System.ComponentModel.DataAnnotations;
+using PAC.Vidly.WebApi.Services.Sessions;
 
 namespace PAC.Vidly.WebApi.Services.Users
 {
     public sealed class UserService : IUserService
     {
         private readonly IRepository<User> _userRepository;
+        private readonly ISessionService _sessionService;
 
-        public UserService(IRepository<User> userRepository)
+        public UserService(IRepository<User> userRepository,  ISessionService sessionService)
         {
             _userRepository = userRepository;
+            _sessionService = sessionService;
+        }
+        
+        public UserService(IRepository<User> userRepository)
+        {
+            throw new NotImplementedException();
         }
 
         public User GetByCredentials(string email, string password)
@@ -24,5 +31,8 @@ namespace PAC.Vidly.WebApi.Services.Users
 
             return user;
         }
+        
+
+
     }
 }
