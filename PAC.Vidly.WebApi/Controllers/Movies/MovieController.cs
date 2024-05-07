@@ -6,29 +6,36 @@ using PAC.Vidly.WebApi.Services.Movies.Entities;
 namespace PAC.Vidly.WebApi.Controllers.Movies
 {
     [ApiController]
-    [Route("")]
+    [Route("movies")]
     public sealed class MovieController : ControllerBase
     {
         private readonly IMovieService _movieService;
 
-        public MovieController(MovieService movieService)
+        public MovieController(IMovieService movieService)
         {
             _movieService = movieService;
         }
 
         [HttpPost]
-        public void Create(Movie? request)
+        public MovieBasicInfoResponse Create(CreateMovieRequest request)
         {
             if (request == null)
             {
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var userLogged = GetUserLogged();
+            var args = new CreateMovieArgs(
+                request.Id,
+                request.Name,
+                request.Mail,
+                request.Password
+            );
 
-            _movieService.Create(request, userLogged.Id);
+            var userLogged = _movieService.GetUserLogged(args.Mail,args.Password);
+            Movie movieCreated = _movieService.Create(args);
+            return new MovieBasicInfoResponse(movieCreated);
         }
-
+        
         [HttpGet]
         public List<MovieBasicInfoResponse> GetAll()
         {
@@ -38,3 +45,5 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
         }
     }
 }
+
+
