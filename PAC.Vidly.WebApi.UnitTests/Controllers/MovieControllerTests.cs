@@ -17,7 +17,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
         [TestInitialize]
         public void Initialize()
         {
-            _movieServiceMock = new Mock<IMovieService>(MockBehavior.Strict);
+            _movieServiceMock = new Mock<IMovieService>();
             _controller = new MovieController(_movieServiceMock.Object);
         }
 

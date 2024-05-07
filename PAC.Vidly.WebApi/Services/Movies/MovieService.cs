@@ -1,4 +1,5 @@
-﻿using PAC.Vidly.WebApi.DataAccess;
+﻿using PAC.Vidly.WebApi.Controllers.Movies.Models;
+using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
 
 namespace PAC.Vidly.WebApi.Services.Movies
@@ -12,9 +13,19 @@ namespace PAC.Vidly.WebApi.Services.Movies
             _movieRepository = movieRepository;
         }
 
-        public void Create(Movie movie, string userLoggedId)
+        public Movie Add(CreateMovieArgs movie)
         {
-            _movieRepository.Add(movie);
+            var existMovie = _movieRepository.Exist(m => m.Name == movie.Name);
+            if (existMovie)
+                throw new Exception("Movie with given name already created.");
+            
+            Movie movieToSave = new Movie
+            {
+                Name = movie.Name,
+                Creator = movie.Creator
+            };
+            _movieRepository.Add(movieToSave);
+            return movieToSave;
         }
 
         public List<Movie> GetAll()

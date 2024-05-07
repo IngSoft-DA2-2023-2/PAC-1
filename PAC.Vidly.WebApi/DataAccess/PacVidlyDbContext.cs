@@ -26,10 +26,39 @@ namespace PAC.Vidly.WebApi.DataAccess
 
         private static void ConfigSchema(ModelBuilder modelBuilder)
         {
+            var userBuilder = modelBuilder
+                .Entity<User>()
+                .HasMany(u => u.Movies)
+                .WithMany(m => m.Users)
+                .UsingEntity<UserMovie>(
+                    r => r.HasOne(x => x.Movie).WithMany().HasForeignKey(x => x.MovieId),
+                    l => l.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId));
+            
         }
 
         private static void ConfigSeedData(ModelBuilder modelBuilder)
         {
+            modelBuilder
+                .Entity<User>()
+                .HasData(
+                    new User
+                    {
+                        Name = "Admin Admin",
+                        Email = "admin@gmail.com",
+                        Password = "123456"
+                    }
+                );
         }
+    }
+    
+    public sealed record class UserMovie
+    {
+        public string UserId { get; init; } = null!;
+
+        public User User { get; init; } = null!;
+
+        public string MovieId { get; init; } = null!;
+
+        public Movie Movie { get; init; } = null!;
     }
 }
