@@ -12,9 +12,9 @@ namespace PAC.Vidly.WebApi.Controllers.Movies.Models
 
         public MovieBasicInfoResponse(Movie movie)
         {
-            Id = movie.Id;
-            Name = movie.Name;
-            CreatorName = movie.Creator.Name;
+            this.Id = movie.Id;
+            this.Name = movie.Name;
+            this.CreatorName = movie.Creator.Name;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PAC.Vidly.WebApi.Controllers.Movies.Models;
+using PAC.Vidly.WebApi.Services;
 using PAC.Vidly.WebApi.Services.Movies;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
 
@@ -11,7 +12,7 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
     {
         private readonly IMovieService _movieService;
 
-        public MovieController(MovieService movieService)
+        public MovieController(IMovieService movieService)
         {
             _movieService = movieService;
         }
@@ -23,8 +24,13 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
             {
                 throw new ArgumentNullException(nameof(request));
             }
+            if(request.Name == null)
+            {
+                throw new Exception("Name cannot be empty");
+            }
 
-            var userLogged = GetUserLogged();
+            var userLogged = (Services.Movies.Entities.Movie)HttpContext.Items[Item.UserLogged];
+           
 
             _movieService.Create(request, userLogged.Id);
         }
@@ -34,7 +40,10 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
         {
             var movies = _movieService.GetAll();
 
-            return movies;
+            var basicInfoList = movies.Select(movie => new MovieBasicInfoResponse(movie)).ToList();
+
+            return basicInfoList;
         }
+
     }
 }

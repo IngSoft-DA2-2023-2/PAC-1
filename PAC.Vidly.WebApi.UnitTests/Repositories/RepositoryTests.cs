@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using PAC.Vidly.WebApi.DataAccess;
 using System.Data.Common;
 
@@ -12,15 +13,20 @@ namespace PAC.Vidly.WebApi.UnitTests.Repositories
         private readonly DbContext _dbContext;
         private readonly Repository<DummyEntity> _repository;
 
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            _dbContext = new DummyDbContext(options);
+
+            _repository = new Repository<DummyEntity>(_dbContext);
+        }
         public RepositoryTests()
         {
             var options = new DbContextOptionsBuilder<DummyDbContext>()
             .UseInMemoryDatabase("test")
                 .Options;
 
-            _dbContext = new DummyDbContext(options);
-
-            _repository = new Repository<DummyEntity>(_dbContext);
+            
         }
 
         #region Add
