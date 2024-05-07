@@ -34,9 +34,13 @@ services.AddScoped<IRepository<Session>, Repository<Session>>();
 services.AddScoped<IUserService, UserService>();
 
 var PacVidlyConnectionString = configuration.GetConnectionString("Vidly");
+if (string.IsNullOrEmpty(PacVidlyConnectionString))
+{
+    throw new Exception("Connection string not found");
+}
 
-//services.AddDbContext<DbContext, PacVidlyDbContext>(options =>
-//    options.UseSqlServer(PacVidlyConnectionString));
+services.AddDbContext<DbContext, PacVidlyDbContext>(options =>
+  options.UseSqlServer(PacVidlyConnectionString));
 
 
 
