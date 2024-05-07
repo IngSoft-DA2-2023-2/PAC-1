@@ -1,40 +1,51 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PAC.Vidly.WebApi.Controllers.Movies.Models;
+using PAC.Vidly.WebApi.Filters;
 using PAC.Vidly.WebApi.Services.Movies;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
+using PAC.Vidly.WebApi.Services.Sessions;
 
 namespace PAC.Vidly.WebApi.Controllers.Movies
 {
     [ApiController]
-    [Route("")]
-    public sealed class MovieController : ControllerBase
+    [Route("movies")]
+    [AuthenticationFilter]
+    public sealed class MovieController : VidlyControllerBase
     {
         private readonly IMovieService _movieService;
 
-        public MovieController(MovieService movieService)
+        public MovieController(IMovieService movieService,  ISessionService sessionService) : base(sessionService)
         {
             _movieService = movieService;
         }
 
+
         [HttpPost]
-        public void Create(Movie? request)
+        public string Create(Movie? request, [FromHeader] string? authorization)
         {
             if (request == null)
             {
                 throw new ArgumentNullException(nameof(request));
             }
+            
+            var userLogged = base.GetUserLogged(authorization);
 
-            var userLogged = GetUserLogged();
-
-            _movieService.Create(request, userLogged.Id);
+            return _movieService.Create(request, userLogged.Id);
         }
 
         [HttpGet]
         public List<MovieBasicInfoResponse> GetAll()
         {
             var movies = _movieService.GetAll();
+            var movieBasicInfoList = new List<MovieBasicInfoResponse>();
+            
+            foreach (var movie in movies)
+            {
+                var movieBasicInfo = new MovieBasicInfoResponse(movie);
+                movieBasicInfoList.Add(movieBasicInfo);
+            }
 
-            return movies;
+            return movieBasicInfoList;
         }
     }
 }
