@@ -7,7 +7,7 @@ using PAC.Vidly.WebApi.Services.Movies.Entities;
 namespace PAC.Vidly.WebApi.UnitTests.Services
 {
     [TestClass]
-    public sealed class MovieServiceTests
+    public sealed class MovieServiceTest
     {
         private Mock<IRepository<Movie>> _movieRepositoryMock;
 

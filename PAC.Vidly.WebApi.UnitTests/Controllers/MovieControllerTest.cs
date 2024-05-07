@@ -9,7 +9,7 @@ using PAC.Vidly.WebApi.Services.Movies.Entities;
 namespace PAC.Vidly.WebApi.UnitTests.Controllers
 {
     [TestClass]
-    public sealed class MovieControllerTests
+    public sealed class MovieControllerTest
     {
         private MovieController _controller;
         private Mock<IMovieService> _movieServiceMock;

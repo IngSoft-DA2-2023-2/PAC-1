@@ -9,7 +9,7 @@ using PAC.Vidly.WebApi.Services.Users.Entities;
 namespace PAC.Vidly.WebApi.UnitTests.Services
 {
     [TestClass]
-    public sealed class SessionServiceTests
+    public sealed class SessionServiceTest
     {
         private Mock<IRepository<Session>> _sessionRepositoryMock;
         private IUserService _userService;
