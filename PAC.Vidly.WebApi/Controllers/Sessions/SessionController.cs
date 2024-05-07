@@ -5,7 +5,7 @@ using PAC.Vidly.WebApi.Services.Sessions;
 namespace PAC.Vidly.WebApi.Controllers.Sessions
 {
     [ApiController]
-    [Route("login")]
+    [Route("sessions")]
     public sealed class SessionController : ControllerBase
     {
         private readonly ISessionService _sessionService;

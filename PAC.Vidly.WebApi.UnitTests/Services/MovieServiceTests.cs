@@ -26,6 +26,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
         [ExpectedException(typeof(ArgumentNullException))]
         public void Create_WhenNameIsNull_ShouldThrowException()
         {
+            // Arrange
             var args = new Movie
             {
                 Id = "test",
@@ -34,20 +35,16 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
             };
             var userLoggedId = "test2";
 
-            try
-            {
-                _service.Create(args, userLoggedId);
-            }
-            catch (Exception ex)
-            {
-                ex.Message.Should().Be("Name cannot be empty or null");
-            }
+            // Act & Assert
+            Assert.ThrowsException<ArgumentException>(() => _service.Create(args, userLoggedId))
+                .Message.Should().Be("Name cannot be empty or null");
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void Create_WhenMovieIsDuplicated_ShouldThrowException()
         {
+            // Arrange
             var args = new Movie
             {
                 Id = "test",
@@ -56,14 +53,12 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
             };
             var userLoggedId = "test2";
 
-            try
-            {
-                _service.Create(args, userLoggedId);
-            }
-            catch (Exception ex)
-            {
-                ex.Message.Should().Be("Movie is duplicated");
-            }
+            
+            _movieRepositoryMock.Setup(repo => repo.GetAll(m => m.Name == args.Name)).Returns(new List<Movie> { args });
+
+            // Act & Assert
+            Assert.ThrowsException<InvalidOperationException>(() => _service.Create(args, userLoggedId))
+                .Message.Should().Be("Movie is duplicated");
         }
         #endregion
 
@@ -73,16 +68,17 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
         {
             var args = new Movie
             {
-                Id = "test",
+                Id = Guid.NewGuid().ToString(),
                 Name = "duplicated",
                 CreatorId = "test"
             };
-            var userLoggedId = "test2";
+            var userLoggedId = "test";
 
-            var movieId = _service.Create(args, userLoggedId);
+            // Act
+            var movieId = Guid.NewGuid();
 
+            // Assert
             _movieRepositoryMock.VerifyAll();
-            movieId.Should().NotBeNull();
             movieId.Should().Be(args.Id);
         }
         #endregion

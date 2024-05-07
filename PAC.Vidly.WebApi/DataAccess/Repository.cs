@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PAC.Vidly.WebApi.Services.Movies.Entities;
 using System.Linq.Expressions;
 
 namespace PAC.Vidly.WebApi.DataAccess
 {
-    public sealed class Repository<TEntity> : IRepository<TEntity>
+    public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class
     {
         private readonly DbContext _dbContext;
@@ -22,8 +23,11 @@ namespace PAC.Vidly.WebApi.DataAccess
             _dbContext.SaveChanges();
         }
 
-        public List<TEntity> GetAll()
+        public virtual List<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
         {
+            if (predicate != null)
+                return _entities.Where(predicate).ToList();
+
             return _entities.ToList();
         }
 
