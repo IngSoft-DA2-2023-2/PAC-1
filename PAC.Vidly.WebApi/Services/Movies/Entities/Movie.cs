@@ -16,14 +16,5 @@ namespace PAC.Vidly.WebApi.Services.Movies.Entities
         {
             Id = Guid.NewGuid().ToString();
         }
-
-        public Movie(
-            string name,
-            string creatorId)
-            : this()
-        {
-            Name = name;
-            CreatorId = creatorId;
-        }
     }
 }

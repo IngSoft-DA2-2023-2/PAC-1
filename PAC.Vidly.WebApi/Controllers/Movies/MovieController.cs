@@ -18,7 +18,7 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
         }
 
         [HttpPost]
-        public string Create(Movie? request)
+        public string Create(CreateMovieRequest? request)
         {
             if (request == null)
             {
@@ -27,7 +27,7 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
 
             User? userLogged = HttpContext.Items[Items.UserLogged] as User;
 
-            return _movieService.Create(request, userLogged.Id);
+            return _movieService.Create(request, userLogged);
         }
 
         [HttpGet]
