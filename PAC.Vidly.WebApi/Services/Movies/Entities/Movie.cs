@@ -11,6 +11,8 @@ namespace PAC.Vidly.WebApi.Services.Movies.Entities
         public string CreatorId { get; init; } = null!;
 
         public User Creator { get; init; } = null!;
+        
+        public List<User> Users { get; init; }
 
         public Movie()
         {
@@ -24,6 +26,7 @@ namespace PAC.Vidly.WebApi.Services.Movies.Entities
         {
             Name = name;
             CreatorId = creatorId;
+            Users = new List<User>();
         }
     }
 }

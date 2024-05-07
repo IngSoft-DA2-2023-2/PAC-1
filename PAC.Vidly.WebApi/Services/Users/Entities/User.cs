@@ -1,4 +1,6 @@
-﻿namespace PAC.Vidly.WebApi.Services.Users.Entities
+﻿using PAC.Vidly.WebApi.Services.Movies.Entities;
+
+namespace PAC.Vidly.WebApi.Services.Users.Entities
 {
     public sealed record class User
     {
@@ -9,6 +11,11 @@
         public string Email { get; init; } = null!;
 
         public string Password { get; init; } = null!;
+        
+        public List<Movie> Movies { get; init; }
+        
+        public Role Role { get; init; }
+
 
         public User() 
         { 
@@ -24,6 +31,8 @@
             Name = name;
             Email = email;
             Password = password;
+            Movies = new List<Movie>();
         }
+        
     }
 }

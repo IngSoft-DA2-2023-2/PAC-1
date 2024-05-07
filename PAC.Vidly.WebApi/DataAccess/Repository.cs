@@ -15,6 +15,11 @@ namespace PAC.Vidly.WebApi.DataAccess
             _dbContext = dbContext;
             _entities = dbContext.Set<TEntity>();
         }
+        
+        public bool Exist(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _entities.Any(predicate);
+        }
 
         public void Add(TEntity entity)
         {
