@@ -39,7 +39,8 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
         [HttpGet]
         public List<MovieBasicInfoResponse> GetAll()
         {
-            var movies = _movieService.GetAll();
+            var movies = _movieService.GetAll().Select(m => 
+                new MovieBasicInfoResponse(m)).ToList();
 
             return movies;
         }
