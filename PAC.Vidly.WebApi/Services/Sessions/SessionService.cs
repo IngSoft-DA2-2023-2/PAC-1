@@ -1,4 +1,5 @@
-﻿using PAC.Vidly.WebApi.DataAccess;
+﻿using Microsoft.Extensions.Primitives;
+using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Sessions.Entities;
 using PAC.Vidly.WebApi.Services.Users;
 using PAC.Vidly.WebApi.Services.Users.Entities;
@@ -58,6 +59,12 @@ namespace PAC.Vidly.WebApi.Services.Sessions
             }
 
             return session.User;
+        }
+
+        public bool IsAuthorizationExpired(StringValues authorizationHeader)
+        {
+            var session = _sessionRepository.GetOrDefault(s => s.Token == authorizationHeader);
+            return session == null;
         }
     }
 }

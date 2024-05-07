@@ -27,18 +27,24 @@ namespace PAC.Vidly.WebApi.Services.Movies
             {
                 throw new ArgumentNullException(nameof(userLoggedId));
             }
-            if (_movieRepository.GetByName(movie.Name) != null)
+            if (_movieRepository.GetOrDefault(x => x.Name == movie.Name) != null)
             {
                 throw new InvalidOperationException("Movie already exists, cant create duplicated one.");
             }   
 
             Movie movieCreated = new Movie(movie.Name, userLoggedId);
+            _movieRepository.Add(movieCreated);
             return movieCreated;
         }
 
         public List<Movie> GetAll()
         {
             return _movieRepository.GetAll();
+        }
+
+        public Movie GetByName(string name)
+        {
+            return _movieRepository.GetOrDefault(x => x.Name == name);
         }
     }
 }

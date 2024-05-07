@@ -23,7 +23,6 @@ namespace PAC.Vidly.WebApi.Services.Movies.Entities
             : this()
         {
             Name = name;
-            CreatorId = creatorId;
         }
     }
 }

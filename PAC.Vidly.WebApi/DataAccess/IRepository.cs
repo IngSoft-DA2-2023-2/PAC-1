@@ -13,7 +13,5 @@ namespace PAC.Vidly.WebApi.DataAccess
 
         void Update(TEntity entity);
         bool Any(Func<object, bool> value);
-        void Add(CreateMovieArguments movie);
-        object GetByName(string name);
     }
 }
