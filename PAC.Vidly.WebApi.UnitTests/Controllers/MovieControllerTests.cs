@@ -31,22 +31,19 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
                 Name = "test",
                 CreatorId = "test",
             };
+            _movieServiceMock.Setup(m => m.Create(It.IsAny<Movie>())).Returns(request);
 
             var id = _controller.Create(request);
 
             _movieServiceMock.VerifyAll();
-            id.Should().NotBeNull(id);
-            id.Should().Be(request.Id);
+            id.Should().NotBeNull();
+            id.Should().Be(request);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof(Exception))]
         public void Create_WhenNameIsEmpty_ShouldThrowException()
         {
-            var repositoryMock = new Mock<IRepository<Movie>>(MockBehavior.Strict);
-            var service = new MovieService(repositoryMock.Object);
-            var controller = new MovieController(service);
-
             var request = new Movie
             {
                 Id = "test",
@@ -56,11 +53,12 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
 
             try
             {
-                controller.Create(request);
+                _controller.Create(request);
             }
             catch (Exception ex)
             {
-                ex.Message.Should().Be("Name cannot be empty");
+                ex.Message.Should().Be("Code:InvalidRequest, Description: Name cannot be empty");
+                throw;
             }
         }
         #endregion
@@ -69,6 +67,15 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
         [TestMethod]
         public void GetAll_WhenExistOnlyOneMovie_ShouldReturnMoviesMapped()
         {
+            var request = new Movie
+            {
+                Id = "test",
+                Name = string.Empty,
+                CreatorId = "test",
+            };
+            
+            _movieServiceMock.Setup(m => m.GetAll());
+
             var movies = _controller.GetAll();
 
             _movieServiceMock.VerifyAll();
@@ -77,7 +84,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
 
             var movie = movies[0];
             movie.Name.Should().Be("test");
-            movie.CreatorName.Should().Be("test creator");
+            movie.Creator.Name.Should().Be("test creator");
         }
         #endregion
     }

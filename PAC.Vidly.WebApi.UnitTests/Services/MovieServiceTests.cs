@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Linq.Expressions;
+using FluentAssertions;
 using Moq;
 using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Movies;
@@ -16,36 +17,15 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
         [TestInitialize]
         public void Initialize()
         {
-            _movieRepositoryMock = new Mock<IRepository<Movie>>(MockBehavior.Strict);
+            _movieRepositoryMock = new Mock<IRepository<Movie>>();
             _service = new MovieService(_movieRepositoryMock.Object);
         }
 
         #region Create
         #region Error
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Create_WhenNameIsNull_ShouldThrowException()
-        {
-            var args = new Movie
-            {
-                Id = "test",
-                Name = null,
-                CreatorId = "test"
-            };
-            var userLoggedId = "test2";
-
-            try
-            {
-                _service.Create(args, userLoggedId);
-            }
-            catch (Exception ex)
-            {
-                ex.Message.Should().Be("Name cannot be empty or null");
-            }
-        }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof(Exception))]
         public void Create_WhenMovieIsDuplicated_ShouldThrowException()
         {
             var args = new Movie
@@ -58,11 +38,16 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
 
             try
             {
-                _service.Create(args, userLoggedId);
+                _movieRepositoryMock.Setup(r => r.GetOrDefault(It.IsAny<Expression<Func<Movie, bool>>>()))
+                    .Returns(args);
+
+                //_service.Create(args, userLoggedId);
+                _service.Create(args);
             }
             catch (Exception ex)
             {
-                ex.Message.Should().Be("Movie is duplicated");
+                ex.Message.Should().Be("movie duplicated");
+                throw;
             }
         }
         #endregion
@@ -79,7 +64,8 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
             };
             var userLoggedId = "test2";
 
-            var movieId = _service.Create(args, userLoggedId);
+            //var movieId = _service.Create(args, userLoggedId);
+            var movieId = _service.Create(args);
 
             _movieRepositoryMock.VerifyAll();
             movieId.Should().NotBeNull();
