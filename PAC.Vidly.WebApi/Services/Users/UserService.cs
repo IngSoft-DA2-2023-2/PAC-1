@@ -24,5 +24,15 @@ namespace PAC.Vidly.WebApi.Services.Users
 
             return user;
         }
+        
+        public void Add(User userToSave)
+        {
+            var exists = _userRepository.GetOrDefault(u => u.Email == userToSave.Email);
+            if (exists != null)
+            {
+                throw new ValidationException("User already exists");
+            }
+            _userRepository.Add(userToSave);
+        }
     }
 }

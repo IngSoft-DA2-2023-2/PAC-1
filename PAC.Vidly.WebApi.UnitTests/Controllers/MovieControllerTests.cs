@@ -5,6 +5,8 @@ using PAC.Vidly.WebApi.Controllers.Movies;
 using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Movies;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
+using PAC.Vidly.WebApi.Services.Sessions;
+using PAC.Vidly.WebApi.Services.Users.Entities;
 
 namespace PAC.Vidly.WebApi.UnitTests.Controllers
 {
@@ -13,12 +15,14 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
     {
         private MovieController _controller;
         private Mock<IMovieService> _movieServiceMock;
+        private Mock<ISessionService> _sessionServiceMock;
+
 
         [TestInitialize]
         public void Initialize()
         {
             _movieServiceMock = new Mock<IMovieService>(MockBehavior.Strict);
-            _controller = new MovieController(_movieServiceMock.Object);
+            _controller = new MovieController(_movieServiceMock.Object, _sessionServiceMock.Object);
         }
 
         #region Create
@@ -31,8 +35,17 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
                 Name = "test",
                 CreatorId = "test",
             };
+            
+            var authorized = new User
+            {
+                Id = "test",
+                Name = "test creator",
+                Password = "test",
+            };
+            var token ="test";
+            _sessionServiceMock.Setup(s => s.GetUserByToken(It.IsAny<string>())).Returns(authorized);
 
-            var id = _controller.Create(request);
+            var id = _controller.Create(request, token);
 
             _movieServiceMock.VerifyAll();
             id.Should().NotBeNull(id);
@@ -45,7 +58,17 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
         {
             var repositoryMock = new Mock<IRepository<Movie>>(MockBehavior.Strict);
             var service = new MovieService(repositoryMock.Object);
-            var controller = new MovieController(service);
+            // var controller = new MovieController(service);
+            
+            var authorized = new User
+            {
+                Id = "test",
+                Name = "test creator",
+                Password = "test",
+            };
+            var token ="test";
+            _sessionServiceMock.Setup(s => s.GetUserByToken(It.IsAny<string>())).Returns(authorized);
+            
 
             var request = new Movie
             {
@@ -56,7 +79,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
 
             try
             {
-                controller.Create(request);
+                _controller.Create(request, token);
             }
             catch (Exception ex)
             {

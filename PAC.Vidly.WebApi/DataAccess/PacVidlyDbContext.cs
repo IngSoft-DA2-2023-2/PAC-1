@@ -13,9 +13,21 @@ namespace PAC.Vidly.WebApi.DataAccess
 
         public DbSet<User> Users { get; set; }
 
-        public PacVidlyDbContext(DbContextOptions options) 
-            : base(options) 
+        // public PacVidlyDbContext(DbContextOptions options) 
+        //     : base(options) 
+        // {
+        // }
+        
+        public PacVidlyDbContext(DbContextOptions<PacVidlyDbContext> options) : base(options)
         {
+        }
+        
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite("Data Source=vidly.db");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -30,6 +42,13 @@ namespace PAC.Vidly.WebApi.DataAccess
 
         private static void ConfigSeedData(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                Id = "seedUserId",
+                Email = "seed@user.com",
+                Password = "SeedPassword",
+                Name = "SeedName"
+            });
         }
     }
 }
