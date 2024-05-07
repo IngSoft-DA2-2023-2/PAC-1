@@ -5,7 +5,7 @@ using PAC.Vidly.WebApi.Services.Users.Entities;
 
 namespace PAC.Vidly.WebApi.Services.Sessions
 {
-    public sealed class SessionService : ISessionService
+    public sealed class SessionService
     {
         private readonly IRepository<Session> _sessionRepository;
 

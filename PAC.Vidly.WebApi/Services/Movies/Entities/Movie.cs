@@ -21,9 +21,11 @@ namespace PAC.Vidly.WebApi.Services.Movies.Entities
             string name,
             string creatorId)
             : this()
+        
         {
             Name = name;
             CreatorId = creatorId;
+            Id = Guid.NewGuid().ToString();
         }
     }
 }
