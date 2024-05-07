@@ -61,7 +61,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Repositories
 
             _dbContext.Set<DummyEntity>().Add(entity);
 
-            var dummies = _repository.GetAll();
+            var dummies = _repository.GetAll(d => true).ToList();
 
             dummies.Count.Should().Be(1);
             var entitySaved = dummies[0];

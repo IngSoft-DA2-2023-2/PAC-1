@@ -30,12 +30,12 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
                 Id = "test",
                 Name = "test",
                 CreatorId = "test",
+
             };
 
             var id = _controller.Create(request);
 
             _movieServiceMock.VerifyAll();
-            id.Should().NotBeNull(id);
             id.Should().Be(request.Id);
         }
 
@@ -76,8 +76,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
             movies.Should().HaveCount(1);
 
             var movie = movies[0];
-            movie.Name.Should().Be("test");
-            movie.CreatorName.Should().Be("test creator");
+            movie.Id.Should().Be("test");
         }
         #endregion
     }

@@ -14,6 +14,11 @@ namespace PAC.Vidly.WebApi.Services.Movies
 
         public void Create(Movie movie, string userLoggedId)
         {
+            var existingMovies = _movieRepository.GetAll();
+            if (existingMovies.Any(m => m.Name.Equals(movie.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new InvalidOperationException("A movie with the same name already exists.");
+            }
             _movieRepository.Add(movie);
         }
 
