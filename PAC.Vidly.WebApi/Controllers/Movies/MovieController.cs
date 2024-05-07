@@ -17,20 +17,23 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
         }
 
         [HttpPost]
-        public void Create(Movie? request)
+        public MovieBasicInfoResponse Create(Movie? request, string userToken)
         {
             if (request == null)
             {
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var userLogged = GetUserLogged();
-
-            _movieService.Create(request, userLogged.Id);
+            if (string.IsNullOrWhiteSpace(userToken))
+            {
+                throw new ArgumentNullException(nameof(userToken));
+            }
+            _movieService.Create(request, userToken);
+            return new MovieBasicInfoResponse(request);
         }
 
         [HttpGet]
-        public List<MovieBasicInfoResponse> GetAll()
+        public List<Movie> GetAll()
         {
             var movies = _movieService.GetAll();
 
