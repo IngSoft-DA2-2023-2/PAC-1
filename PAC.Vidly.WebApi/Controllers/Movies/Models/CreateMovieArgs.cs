@@ -7,7 +7,7 @@ public class CreateMovieArgs
     public readonly string Name;
     public CreateMovieArgs(string name)
     {
-        if (name.Length == 0) throw new Exception("Name cannot be empty");
+        if (string.IsNullOrEmpty(name)) throw new Exception("Name cannot be empty or null");
         Name = name;
     }
 }
