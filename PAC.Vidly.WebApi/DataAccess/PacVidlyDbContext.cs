@@ -13,8 +13,12 @@ namespace PAC.Vidly.WebApi.DataAccess
 
         public DbSet<User> Users { get; set; }
 
-        public PacVidlyDbContext(DbContextOptions options) 
-            : base(options) 
+        // public PacVidlyDbContext(DbContextOptions options) 
+        //     : base(options) 
+        // {
+        // }
+        
+        public PacVidlyDbContext(DbContextOptions<PacVidlyDbContext> options) : base(options)
         {
         }
         
@@ -38,6 +42,13 @@ namespace PAC.Vidly.WebApi.DataAccess
 
         private static void ConfigSeedData(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                Id = "seedUserId",
+                Email = "seed@user.com",
+                Password = "SeedPassword",
+                Name = "SeedName"
+            });
         }
     }
 }
