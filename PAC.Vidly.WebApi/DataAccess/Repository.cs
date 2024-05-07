@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace PAC.Vidly.WebApi.DataAccess
 {
-    public sealed class Repository<TEntity> : IRepository<TEntity>
+    public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class
     {
         private readonly DbContext _dbContext;
@@ -40,6 +40,11 @@ namespace PAC.Vidly.WebApi.DataAccess
             var entity = query.FirstOrDefault();
 
             return entity;
+        }
+
+        object IRepository<TEntity>.Exists(Func<object, bool> value)
+        {
+            throw new NotImplementedException();
         }
     }
 }
