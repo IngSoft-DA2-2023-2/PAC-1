@@ -27,7 +27,6 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
         #region Error
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void Create_WhenMovieIsDuplicated_ShouldThrowException()
         {
             var args = new CreateMovieArgs("duplicated");
@@ -35,6 +34,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
             try
             {
                 _movieRepositoryMock.Setup(r => r.GetOrDefault(It.IsAny<Expression<Func<Movie, bool>>>())).Returns(new Movie());
+                _movieRepositoryMock.Setup(r => r.Add(It.IsAny<Movie>()));
                 
                 _service.Create(args, new User());
             }
@@ -51,6 +51,9 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
         {
             var args = new CreateMovieArgs("Correct");
 
+            _movieRepositoryMock.Setup(r => r.GetOrDefault(It.IsAny<Expression<Func<Movie, bool>>>())).Returns((Movie?)null);
+            _movieRepositoryMock.Setup(r => r.Add(It.IsAny<Movie>()));
+            
             var movie = _service.Create(args, new User());
 
             _movieRepositoryMock.VerifyAll();
