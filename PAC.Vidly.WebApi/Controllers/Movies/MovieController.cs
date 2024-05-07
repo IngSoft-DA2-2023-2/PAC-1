@@ -28,10 +28,10 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
                 throw new ArgumentNullException(nameof(request));
             }
 
-            User? userLogged = HttpContext.Items[Items.UserLogged] as User;
-            
             var movieToSave = new CreateMovieArgs(request.Name);
-            
+
+            User? userLogged = HttpContext.Items[Items.UserLogged] as User;
+
             var movieSaved = _movieService.Create(movieToSave, userLogged);
 
             return new CreateMovieResponse(movieSaved);

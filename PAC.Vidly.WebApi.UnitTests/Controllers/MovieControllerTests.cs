@@ -1,5 +1,7 @@
 ﻿
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using PAC.Vidly.WebApi.Controllers.Movies;
 using PAC.Vidly.WebApi.Controllers.Movies.Models;
@@ -15,12 +17,23 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
     {
         private MovieController _controller;
         private Mock<IMovieService> _movieServiceMock;
+        
+        private Mock<HttpContext> _httpContextMock;
+        private User creator;
 
         [TestInitialize]
         public void Initialize()
         {
+            _httpContextMock = new Mock<HttpContext>(MockBehavior.Strict);
+            ControllerContext controllerContext = new ControllerContext { HttpContext = _httpContextMock.Object };
             _movieServiceMock = new Mock<IMovieService>(MockBehavior.Strict);
             _controller = new MovieController(_movieServiceMock.Object);
+            _controller.ControllerContext = controllerContext;
+
+            creator = new User()
+            {
+                Name = "creatorTest"
+            };
         }
 
         #region Create
@@ -31,6 +44,14 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
             {
                 Name = "test",
             };
+            
+            var movie = new Movie()
+            {
+                Name = "test",
+            };
+
+            _httpContextMock.SetupGet(c => c.Items[Items.UserLogged]).Returns(creator);
+            _movieServiceMock.Setup(m => m.Create(It.IsAny<CreateMovieArgs>(), It.IsAny<User>())).Returns(movie);
 
             var response = _controller.Create(request);
 
@@ -39,13 +60,8 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Create_WhenNameIsEmpty_ShouldThrowException()
         {
-            var repositoryMock = new Mock<IRepository<Movie>>(MockBehavior.Strict);
-            var service = new MovieService(repositoryMock.Object);
-            var controller = new MovieController(service);
-
             var request = new CreateMovieRequest()
             {
                 Name = string.Empty,
@@ -53,7 +69,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
 
             try
             {
-                controller.Create(request);
+                _controller.Create(request);
             }
             catch (Exception ex)
             {
@@ -62,7 +78,6 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
         }
         
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Create_WhenNameIsNull_ShouldThrowException()
         {
             var request = new CreateMovieRequest()
@@ -70,6 +85,8 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
                 Name = null,
             };
 
+            _httpContextMock.SetupGet(c => c.Items[Items.UserLogged]).Returns(creator);
+            
             try
             {
                 _controller.Create(request);
@@ -86,15 +103,22 @@ namespace PAC.Vidly.WebApi.UnitTests.Controllers
         [TestMethod]
         public void GetAll_WhenExistOnlyOneMovie_ShouldReturnMoviesMapped()
         {
-            var movies = _controller.GetAll();
 
             _movieServiceMock.VerifyAll();
 
+            _movieServiceMock.Setup(c => c.GetAll()).Returns(new List<Movie>() { new Movie()
+            {
+                Name = "test",
+                Creator = creator,
+            } });
+         
+            var movies = _controller.GetAll();
+            
             movies.Should().HaveCount(1);
 
             var movie = movies[0];
             movie.Name.Should().Be("test");
-            movie.CreatorName.Should().Be("test creator");
+            movie.CreatorName.Should().Be("creatorTest");
         }
         #endregion
     }
