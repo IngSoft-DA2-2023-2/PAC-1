@@ -1,4 +1,5 @@
-﻿using PAC.Vidly.WebApi.DataAccess;
+﻿using PAC.Vidly.WebApi.Controllers.Movies.Models;
+using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
 
 namespace PAC.Vidly.WebApi.Services.Movies
@@ -17,9 +18,17 @@ namespace PAC.Vidly.WebApi.Services.Movies
             _movieRepository.Add(movie);
         }
 
-        public List<Movie> GetAll()
+        public List<MovieBasicInfoResponse> GetAll()
         {
-            return _movieRepository.GetAll();
+            List<Movie> movies = _movieRepository.GetAll();
+            List<MovieBasicInfoResponse> basicInfo = new List<MovieBasicInfoResponse>();
+            
+            foreach (Movie movie in movies)
+            {
+                MovieBasicInfoResponse movieBasicInfo = new MovieBasicInfoResponse(movie);
+            }
+
+            return basicInfo;
         }
     }
 }
