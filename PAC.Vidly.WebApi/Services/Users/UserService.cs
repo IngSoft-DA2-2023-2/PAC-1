@@ -24,5 +24,15 @@ namespace PAC.Vidly.WebApi.Services.Users
 
             return user;
         }
+
+        public void Create(User u)
+        {
+            _userRepository.Add(u);
+        }
+
+        public List<User> GetAll()
+        {
+            return _userRepository.GetAll();
+        }
     }
 }

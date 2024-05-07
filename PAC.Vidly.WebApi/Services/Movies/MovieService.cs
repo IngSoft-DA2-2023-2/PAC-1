@@ -12,9 +12,10 @@ namespace PAC.Vidly.WebApi.Services.Movies
             _movieRepository = movieRepository;
         }
 
-        public void Create(Movie movie, string userLoggedId)
+        public Movie Create(Movie movie, string userLoggedId)
         {
             _movieRepository.Add(movie);
+            return movie;
         }
 
         public List<Movie> GetAll()
