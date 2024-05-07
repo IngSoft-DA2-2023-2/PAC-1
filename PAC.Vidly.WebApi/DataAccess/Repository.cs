@@ -33,6 +33,15 @@ namespace PAC.Vidly.WebApi.DataAccess
             _dbContext.SaveChanges();
         }
 
+        public TEntity Get(Expression<Func<TEntity, bool>> predicate)
+        {
+            var query = _entities.Where(predicate);
+
+            var entity = query.FirstOrDefault();
+
+            return entity;
+        }
+
         public TEntity? GetOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             var query = _entities.Where(predicate);

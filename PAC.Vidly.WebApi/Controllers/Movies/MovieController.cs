@@ -2,6 +2,8 @@
 using PAC.Vidly.WebApi.Controllers.Movies.Models;
 using PAC.Vidly.WebApi.Services.Movies;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
+using PAC.Vidly.WebApi.Services.Users.Entities;
+using Vidly.WebApi.Filters;
 
 namespace PAC.Vidly.WebApi.Controllers.Movies
 {
@@ -11,30 +13,34 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
     {
         private readonly IMovieService _movieService;
 
-        public MovieController(MovieService movieService)
+        public MovieController(IMovieService movieService)
         {
             _movieService = movieService;
         }
 
         [HttpPost]
-        public void Create(Movie? request)
+        [AuthenticationFilter]
+        public CreateMovieResponse Create(CreateMovieRequest? request)
         {
             if (request == null)
             {
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var userLogged = GetUserLogged();
+            var userLogged = (User)HttpContext.Items["UserLogged"];
+            var moviedto = new MovieDto(request, userLogged);
 
-            _movieService.Create(request, userLogged.Id);
+            var movie = _movieService.Create(moviedto, userLogged.Id);
+
+            return new CreateMovieResponse(movie);
         }
 
         [HttpGet]
         public List<MovieBasicInfoResponse> GetAll()
         {
             var movies = _movieService.GetAll();
-
-            return movies;
+            var response = movies.Select(movie => new MovieBasicInfoResponse(movie)).ToList();
+            return response;
         }
     }
 }
