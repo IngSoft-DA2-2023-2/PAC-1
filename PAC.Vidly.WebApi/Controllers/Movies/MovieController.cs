@@ -7,7 +7,7 @@ using PAC.Vidly.WebApi.Services.Users.Entities;
 namespace PAC.Vidly.WebApi.Controllers.Movies
 {
     [ApiController]
-    [Route("")]
+    [Route("movies")]
     public sealed class MovieController : ControllerBase
     {
         private readonly IMovieService _movieService;
@@ -18,7 +18,7 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
         }
 
         [HttpPost]
-        public void Create(Movie? request)
+        public string Create(Movie? request)
         {
             if (request == null)
             {
@@ -27,7 +27,7 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
 
             User? userLogged = HttpContext.Items[Items.UserLogged] as User;
 
-            _movieService.Create(request, userLogged.Id);
+            return _movieService.Create(request, userLogged.Id);
         }
 
         [HttpGet]
