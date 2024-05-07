@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PAC.Vidly.WebApi.Controllers.Sessions.Models;
+using PAC.Vidly.WebApi.Filters;
 using PAC.Vidly.WebApi.Services.Sessions;
 
 namespace PAC.Vidly.WebApi.Controllers.Sessions
