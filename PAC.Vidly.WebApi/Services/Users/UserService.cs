@@ -24,5 +24,17 @@ namespace PAC.Vidly.WebApi.Services.Users
 
             return user;
         }
+
+        public User GetById(string id)
+        {
+            var user = _userRepository.GetOrDefault(u => u.Id == id);
+
+            if(user == null)
+            {
+                throw new InvalidOperationException("User not found");
+            }
+
+            return user;
+        }
     }
 }
