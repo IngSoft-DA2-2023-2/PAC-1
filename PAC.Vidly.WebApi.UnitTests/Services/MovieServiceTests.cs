@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Linq.Expressions;
+using FluentAssertions;
 using Moq;
 using PAC.Vidly.WebApi.Controllers.Movies.Models;
 using PAC.Vidly.WebApi.DataAccess;
@@ -29,21 +30,17 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
         [ExpectedException(typeof(InvalidOperationException))]
         public void Create_WhenMovieIsDuplicated_ShouldThrowException()
         {
-            var args = new Movie
-            {
-                Id = "test",
-                Name = "duplicated",
-                CreatorId = "test"
-            };
-            var userLoggedId = "test2";
+            var args = new CreateMovieArgs("duplicated");
 
             try
             {
-                _service.Create(args, userLoggedId);
+                _movieRepositoryMock.Setup(r => r.GetOrDefault(It.IsAny<Expression<Func<Movie, bool>>>())).Returns(new Movie());
+                
+                _service.Create(args, new User());
             }
             catch (Exception ex)
             {
-                ex.Message.Should().Be("Movie is duplicated");
+                ex.Message.Should().Be("Movie duplicated");
             }
         }
         #endregion
