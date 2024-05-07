@@ -14,7 +14,7 @@ namespace PAC.Vidly.WebApi.Filters
                         new ObjectResult(new
                         {
                             Code = "InternalError",
-                            Message = exception.Message,
+                            Message = "Ocurrio un error, intente mas tarde.",
                             DeveloperMessage = exception.GetType().ToString()
                         })
                         {

@@ -22,6 +22,8 @@ namespace PAC.Vidly.WebApi.Services.Movies
                 CreatorId = userLogged.Id,
                 Creator = userLogged
             };
+
+            validateMovieIsNotDuplicated(movie);
             
             _movieRepository.Add(movie);
             return movie.Id;
@@ -38,6 +40,14 @@ namespace PAC.Vidly.WebApi.Services.Movies
             }
 
             return basicInfo;
+        }
+
+        private void validateMovieIsNotDuplicated(Movie movie)
+        {
+            Movie? duplicatedMovie = _movieRepository.
+                GetOrDefault(movie => movie.Name == movie.Name);
+            if (duplicatedMovie is not null)
+                throw new Exception("Movie duplicated");
         }
     }
 }
