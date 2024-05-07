@@ -18,6 +18,9 @@ namespace PAC.Vidly.WebApi.DataAccess
         {
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
+            optionsBuilder.UseSqlite("Data Source=vidly.db");
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             ConfigSchema(modelBuilder);
@@ -30,6 +33,9 @@ namespace PAC.Vidly.WebApi.DataAccess
 
         private static void ConfigSeedData(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasData(
+                new User { Email = "mail@mail.com", Name = "Pedro", Id = Guid.NewGuid().ToString() }
+            );
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PAC.Vidly.WebApi.Controllers.Movies.Models;
+using PAC.Vidly.WebApi.Filters;
 using PAC.Vidly.WebApi.Services.Movies;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
 using PAC.Vidly.WebApi.Services.Users.Entities;
@@ -8,6 +9,7 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
 {
     [ApiController]
     [Route("movie")]
+    [AuthenticationFilter]
     public sealed class MovieController : ControllerBase
     {
         private readonly IMovieService _movieService;
@@ -18,7 +20,7 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
         }
 
         [HttpPost]
-        public void Create(Movie? request)
+        public Movie Create(Movie? request)
         {
             if (request == null)
             {
@@ -27,7 +29,8 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
 
             var userLogged = GetUserLogged();
 
-            _movieService.Create(request, userLogged.Id);
+            var movie = _movieService.Create(request, userLogged.Id);
+            return movie;
         }
 
         private User GetUserLogged()
