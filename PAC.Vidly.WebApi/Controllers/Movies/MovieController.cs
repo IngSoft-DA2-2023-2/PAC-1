@@ -42,7 +42,14 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
         {
             var movies = _movieService.GetAll();
 
-            return movies;
+            var moviesToReturn = new List<MovieBasicInfoResponse>();
+
+            foreach (var movie in movies)
+            {
+                moviesToReturn.Add(new MovieBasicInfoResponse(movie));
+            }
+
+            return moviesToReturn;
         }
     }
 }
