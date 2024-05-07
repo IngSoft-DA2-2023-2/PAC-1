@@ -34,5 +34,13 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
             isValid.Should().BeTrue();
         }
         #endregion
+        
+        [TestMethod]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void GetCurrentUser_WithNullToken_ThrowsException()
+        {
+            _service.GetCurrentUser(null);
+        }
+        
     }
 }

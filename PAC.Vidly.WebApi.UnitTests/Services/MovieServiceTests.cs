@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
+using PAC.Vidly.WebApi.Controllers.Movies.Models;
 using PAC.Vidly.WebApi.DataAccess;
 using PAC.Vidly.WebApi.Services.Movies;
 using PAC.Vidly.WebApi.Services.Movies.Entities;
@@ -26,13 +27,8 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
         [ExpectedException(typeof(ArgumentNullException))]
         public void Create_WhenNameIsNull_ShouldThrowException()
         {
-            var args = new Movie
-            {
-                Id = "test",
-                Name = null,
-                CreatorId = "test"
-            };
             var userLoggedId = "test2";
+            var args = new CreateMovieArgs(null, userLoggedId);
 
             try
             {
@@ -48,16 +44,12 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
         [ExpectedException(typeof(InvalidOperationException))]
         public void Create_WhenMovieIsDuplicated_ShouldThrowException()
         {
-            var args = new Movie
-            {
-                Id = "test",
-                Name = "duplicated",
-                CreatorId = "test"
-            };
             var userLoggedId = "test2";
+            var args = new CreateMovieArgs("duplicated",userLoggedId);
 
             try
             {
+                _service.Create(args, userLoggedId);
                 _service.Create(args, userLoggedId);
             }
             catch (Exception ex)
@@ -71,19 +63,13 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
         [TestMethod]
         public void Create_WhenInfoIsCorrect_ShouldReturnId()
         {
-            var args = new Movie
-            {
-                Id = "test",
-                Name = "duplicated",
-                CreatorId = "test"
-            };
             var userLoggedId = "test2";
+            var args = new CreateMovieArgs("duplicated",userLoggedId);
 
             var movieId = _service.Create(args, userLoggedId);
 
             _movieRepositoryMock.VerifyAll();
             movieId.Should().NotBeNull();
-            movieId.Should().Be(args.Id);
         }
         #endregion
         #endregion
