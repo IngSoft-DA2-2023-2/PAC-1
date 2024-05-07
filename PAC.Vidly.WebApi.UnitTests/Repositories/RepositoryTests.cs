@@ -64,11 +64,10 @@ namespace PAC.Vidly.WebApi.UnitTests.Repositories
         public void GetAll_WhenExistData_ShouldReturnIt()
         {
             var entity = new DummyEntity("some name");
-
+            _repository.Add(entity);
             _dbContext.Set<DummyEntity>().Add(entity);
 
             var dummies = _repository.GetAll();
-
             dummies.Count.Should().Be(1);
             var entitySaved = dummies[0];
             entitySaved.Id.Should().Be(entity.Id);
@@ -80,7 +79,6 @@ namespace PAC.Vidly.WebApi.UnitTests.Repositories
     internal sealed class DummyDbContext : DbContext
     {
         public DbSet<DummyEntity> Dummies { get; set; }
-        //no se como acceder a dummies
 
         public DummyDbContext(DbContextOptions options)
         : base(options)
