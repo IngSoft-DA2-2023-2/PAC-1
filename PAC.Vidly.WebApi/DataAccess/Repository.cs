@@ -35,11 +35,20 @@ namespace PAC.Vidly.WebApi.DataAccess
 
         public TEntity? GetOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
-            var query = _entities.Where(predicate);
+            var entity = _entities.FirstOrDefault(predicate);
 
-            var entity = query.FirstOrDefault();
+            if (entity == null)
+            {
+                throw new InvalidOperationException($"Entity {typeof(TEntity).Name} not found");
+            }
 
             return entity;
         }
+
+        public bool Exist(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _entities.Any(predicate);
+        }
+
     }
 }

@@ -12,6 +12,8 @@ namespace PAC.Vidly.WebApi.DataAccess
 
         void Update(TEntity entity);
 
+        bool Exist(Expression<Func<TEntity, bool>> expression);
+
 
     }
 }

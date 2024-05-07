@@ -24,6 +24,7 @@
             Name = name;
             Email = email;
             Password = password;
+            Id = Guid.NewGuid().ToString();
         }
     }
 }
