@@ -29,8 +29,10 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
             }
             
             var userLogged = base.GetUserLogged(authorization);
+            
+            var args = new CreateMovieArgs(request, userLogged.Id);
 
-            return _movieService.Create(request, userLogged.Id);
+            return _movieService.Create(args);
         }
 
         [HttpGet]

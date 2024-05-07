@@ -33,10 +33,10 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
                 CreatorId = "test"
             };
             var userLoggedId = "test2";
-
+            var createArgs = new CreateMovieArgs(args, userLoggedId);
             try
             {
-                _service.Create(args, userLoggedId);
+                _service.Create(createArgs);
             }
             catch (Exception ex)
             {
@@ -55,10 +55,10 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
                 CreatorId = "test"
             };
             var userLoggedId = "test2";
-
+            var createArgs = new CreateMovieArgs(args, userLoggedId);
             try
             {
-                _service.Create(args, userLoggedId);
+                _service.Create(createArgs);
             }
             catch (Exception ex)
             {
@@ -78,8 +78,10 @@ namespace PAC.Vidly.WebApi.UnitTests.Services
                 CreatorId = "test"
             };
             var userLoggedId = "test2";
-
-            var movieId = _service.Create(args, userLoggedId);
+            
+            var createArgs = new CreateMovieArgs(args, userLoggedId);
+            
+            var movieId = _service.Create(createArgs);
 
             _movieRepositoryMock.VerifyAll();
             movieId.Should().NotBeNull();

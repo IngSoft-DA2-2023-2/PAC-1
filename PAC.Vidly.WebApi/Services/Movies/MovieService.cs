@@ -12,10 +12,15 @@ namespace PAC.Vidly.WebApi.Services.Movies
             _movieRepository = movieRepository;
         }
 
-        public string Create(Movie movie, string userLoggedId)
+        public string Create(CreateMovieArgs args)
         {
-            _movieRepository.Add(movie);
-            return movie.Id;
+            var existingMovie = _movieRepository.GetOrDefault(movie => movie.Name == args.Movie.Name && movie.Creator.Name == args.Movie.Creator.Name);
+            if (existingMovie == null)
+            {
+               throw new InvalidOperationException("Movie already exists");
+            }
+            _movieRepository.Add(args.Movie);
+            return args.Movie.Id;
         }
 
         public List<Movie> GetAll()
