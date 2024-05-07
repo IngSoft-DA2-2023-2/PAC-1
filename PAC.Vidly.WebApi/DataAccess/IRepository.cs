@@ -6,6 +6,8 @@ namespace PAC.Vidly.WebApi.DataAccess
     {
         void Add(TEntity entity);
 
+        TEntity Get(Expression<Func<TEntity, bool>> predicate);
+
         TEntity? GetOrDefault(Expression<Func<TEntity, bool>> predicate);
 
         List<TEntity> GetAll();

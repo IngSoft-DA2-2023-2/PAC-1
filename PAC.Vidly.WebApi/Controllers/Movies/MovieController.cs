@@ -13,14 +13,14 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
     {
         private readonly IMovieService _movieService;
 
-        public MovieController(MovieService movieService)
+        public MovieController(IMovieService movieService)
         {
             _movieService = movieService;
         }
 
         [HttpPost]
         [AuthenticationFilter]
-        public void Create(Movie? request)
+        public CreateMovieResponse Create(CreateMovieRequest? request)
         {
             if (request == null)
             {
@@ -28,8 +28,11 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
             }
 
             var userLogged = (User)HttpContext.Items["UserLogged"];
+            var moviedto = new MovieDto(request, userLogged);
 
-            _movieService.Create(request, userLogged.Id);
+            var movie = _movieService.Create(moviedto, userLogged.Id);
+
+            return new CreateMovieResponse(movie);
         }
 
         [HttpGet]
