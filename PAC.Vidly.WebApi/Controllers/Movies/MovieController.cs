@@ -30,7 +30,7 @@ namespace PAC.Vidly.WebApi.Controllers.Movies
             }
 
             var userLogged = (Services.Movies.Entities.Movie)HttpContext.Items[Item.UserLogged];
-            //var userLogged = GetUserLogged();
+           
 
             _movieService.Create(request, userLogged.Id);
         }
