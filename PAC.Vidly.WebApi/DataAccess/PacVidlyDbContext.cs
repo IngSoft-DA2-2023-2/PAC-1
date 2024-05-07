@@ -18,17 +18,17 @@ namespace PAC.Vidly.WebApi.DataAccess
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            ConfigSchema(optionsBuilder);
-            ConfigSeedData(optionsBuilder);
+            ConfigSchema(modelBuilder);
+            ConfigSeedData(modelBuilder);
         }
 
-        private static void ConfigSchema(DbContextOptionsBuilder optionsBuilder)
+        private static void ConfigSchema(ModelBuilder modelBuilder)
         {
         }
 
-        private static void ConfigSeedData(DbContextOptionsBuilder optionsBuilder)
+        private static void ConfigSeedData(ModelBuilder modelBuilder)
         {
         }
     }

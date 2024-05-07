@@ -9,31 +9,18 @@ namespace PAC.Vidly.WebApi.UnitTests.Repositories
     [TestClass]
     public sealed class RepositoryTests
     {
-        private readonly DbConnection _connection;
         private readonly DbContext _dbContext;
         private readonly Repository<DummyEntity> _repository;
 
         public RepositoryTests()
         {
-            _connection = new SqliteConnection("Filename=:memory:");
             var options = new DbContextOptionsBuilder<DummyDbContext>()
-            .UseSqlite(_connection)
+            .UseInMemoryDatabase("test")
                 .Options;
+
             _dbContext = new DummyDbContext(options);
+
             _repository = new Repository<DummyEntity>(_dbContext);
-        }
-
-        [TestInitialize]
-        public void Initialize()
-        {
-            _connection.Open();
-            _dbContext.Database.EnsureCreated();
-        }
-
-        [TestCleanup]
-        public void Cleanup()
-        {
-            _dbContext.Database.EnsureDeleted();
         }
 
         #region Add
@@ -41,6 +28,20 @@ namespace PAC.Vidly.WebApi.UnitTests.Repositories
         public void Add_WhenInfoIsProvided_ShouldAddedToDatabase()
         {
             var entity = new DummyEntity("some name");
+
+            _repository.Add(entity);
+
+            var entitiesSaved = _dbContext.Set<DummyEntity>().ToList();
+            entitiesSaved.Count.Should().Be(1);
+            var entitySaved = entitiesSaved[0];
+            entitySaved.Id.Should().Be(entity.Id);
+            entitySaved.Name.Should().Be(entity.Name);
+        }
+
+        [TestMethod]
+        public void Add_WhenInfo2IsProvided_ShouldAddedToDatabase()
+        {
+            var entity = new DummyEntity("some name2");
 
             _repository.Add(entity);
 
@@ -88,7 +89,7 @@ namespace PAC.Vidly.WebApi.UnitTests.Repositories
 
         public DummyEntity()
         {
-            Id = Guid.NewGuid().ToString(); 
+            Id = Guid.NewGuid().ToString();
         }
 
         public DummyEntity(string name)

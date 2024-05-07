@@ -4,19 +4,36 @@ Para entregar su trabajo tienen que hacer un **Pull Request** con su **nombre, a
 
 ## Consigna
 
-El codigo entregado tiene errores de compilacion, de ejcucion, pruebas que fallan, pruebas mal ubicadas y codigo faltante para la completitud de funcionalidades. Deberan de arreglar los problemas encontrados, completar las funcionalidades existentes y realizar la implementacion de nuevas funcionalidades.
+El codigo entregado tiene varios errores, pueden ser de compilacion, de ejcucion, pruebas que fallan, pruebas mal ubicadas, mal diseño de endpoints y codigo faltante para la completitud de funcionalidades. La pruebe consta de arreglar los problemas encontrados, completar las funcionalidades existentes y realizar la implementacion de nuevas funcionalidades.
 
-## Correciones
+Deberan de realizar pruebas unitarias para las nuevas funcionalidades y para la modificacion de funcionalidades existentes.
+
+No deben realizar pruebas para aquel codigo que funciona correctamente y fue provisto.
+
+## Correcciones
 
 ### Resolver errores de compilacion
 
 ### Resolver pruebas que fallan
 
-### Resolver los siguientes errores de ejecucion
+### Errores de ejecucion
 
 - Cuando se quiere acceder a cualquier endpoint ocurre un error como el siguiente:
 
-- No se puede acceder a las peliculas usando el endpoint `movies`. Resolver para manipular el recurso con ese endpoint
+<p align="center">
+<img src="./images/image.png">
+</p>
+
+- No se puede acceder a las peliculas usando el endpoint `movies` ocurre el siguiente error:
+
+<p align="center">
+<img src="./images/image-1.png">
+</p>
+
+- Se quiere usar el endpoint `POST sessions` para la autenticacion pero ocurre el siguiente error:
+<p align="center">
+<img src="./images/image-1.png">
+</p>
 
 ### Bugs crear pelicula
 
@@ -35,7 +52,11 @@ Restricciones a cumplir:
 
 ### Bug al listar las peliculas
 
-Cuando se usa el endpoint para listar las peliculas, ocurre una excepcion
+Cuando existen peliculas en el sistema y se usa el endpoint para listar las peliculas, ocurre la siguiente excepcion:
+
+<p align="center">
+<img src="./images/image-2.png">
+</p>
 
 ## Modificaciones
 
@@ -47,7 +68,19 @@ Solo debe existir un perfil de ejecucion llamado `Vidly.WebApi`, dicho perfil de
 
 ### Uso sqlite
 
-Tanto para el uso en ejecucion como para las pruebas, se debe utilizar el proveedor de base de datos SQLite
+Tanto para el uso en ejecucion como para las pruebas, se debe utilizar el proveedor de base de datos SQLite.
+
+El connection string debe ser el siguiente.
+
+```JSON
+{
+  "ConnectionStrings":{
+    "Vidly": "Data Source=vidly.db"
+  }
+}
+```
+
+Una vez ejecutada las migraciones se debera de crear el siguiente archivo `vidly.db` en el directorio `PAC.Vidly.WebApi`
 
 ### Seed data
 
@@ -98,4 +131,6 @@ Dado el identificador de una pelicula se desea obtener el nombre, la cantidad de
 ## Posible mejora
 
 Actualmente la interfaz `IUserService` tiene el metodo `GetByCredentials` la cual retorna el usuario con las credenciales que se le pase en caso de que exista, de lo contrario se retorna una excepcion. Dado que la visibilidad de `IUserService` es `public`, un `controller` que use esta interfaz tiene acceso a dicho metodo. Que principio SOLID usaria para que solo la funcionalidad `GetByCredentials` sea utilizada por clases `servicios`.
+
+[Responder aca]
 
